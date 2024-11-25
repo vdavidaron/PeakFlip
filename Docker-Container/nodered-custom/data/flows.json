@@ -280,24 +280,6 @@
         "db": "IoTData"
     },
     {
-        "id": "09e52ac0d5efe734",
-        "type": "xmpp-server",
-        "server": "172.30.0.106",
-        "port": "5222",
-        "user": "iotdevice@localhost",
-        "nickname": "",
-        "resource": ""
-    },
-    {
-        "id": "5dbcf5dfa2242593",
-        "type": "xmpp-server",
-        "server": "172.30.0.106",
-        "port": "5222",
-        "user": "user1",
-        "nickname": "",
-        "resource": ""
-    },
-    {
         "id": "1c5203f54951bf7a",
         "type": "inject",
         "z": "dae29d0432198ee9",
