@@ -1,0 +1,11 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "dependencies": {
+        "@meowwolf/node-red-contrib-amqp": "~2.4.2",
+        "node-red-contrib-influxdb": "~0.6.1",
+        "node-red-node-xmpp": "~0.6.3"
+    }
+}

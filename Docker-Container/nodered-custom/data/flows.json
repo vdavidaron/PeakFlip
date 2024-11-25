@@ -1,0 +1,389 @@
+[
+    {
+        "id": "dae29d0432198ee9",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a928ba0.2d1f748",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "172.30.0.101",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "compatmode": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "0648859e6711c8f9",
+        "type": "ui_tab",
+        "name": "Sensors",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "40213cc014bd0905",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "0648859e6711c8f9",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false,
+        "className": ""
+    },
+    {
+        "id": "ae2aceeadfb4b296",
+        "type": "ui_base",
+        "theme": {
+            "name": "theme-light",
+            "lightTheme": {
+                "default": "#0094CE",
+                "baseColor": "#0094CE",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": true,
+                "reset": false
+            },
+            "darkTheme": {
+                "default": "#097479",
+                "baseColor": "#097479",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif",
+                "edited": false
+            },
+            "customTheme": {
+                "name": "Untitled Theme 1",
+                "default": "#4B7930",
+                "baseColor": "#4B7930",
+                "baseFont": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+            },
+            "themeState": {
+                "base-color": {
+                    "default": "#0094CE",
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-titlebar-backgroundColor": {
+                    "value": "#0094CE",
+                    "edited": false
+                },
+                "page-backgroundColor": {
+                    "value": "#fafafa",
+                    "edited": false
+                },
+                "page-sidebar-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-textColor": {
+                    "value": "#1bbfff",
+                    "edited": false
+                },
+                "group-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "group-backgroundColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "widget-textColor": {
+                    "value": "#111111",
+                    "edited": false
+                },
+                "widget-backgroundColor": {
+                    "value": "#0094ce",
+                    "edited": false
+                },
+                "widget-borderColor": {
+                    "value": "#ffffff",
+                    "edited": false
+                },
+                "base-font": {
+                    "value": "-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Oxygen-Sans,Ubuntu,Cantarell,Helvetica Neue,sans-serif"
+                }
+            },
+            "angularTheme": {
+                "primary": "indigo",
+                "accents": "blue",
+                "warn": "red",
+                "background": "grey",
+                "palette": "light"
+            }
+        },
+        "site": {
+            "name": "Node-RED Dashboard",
+            "hideToolbar": "false",
+            "allowSwipe": "false",
+            "lockMenu": "false",
+            "allowTempTheme": "true",
+            "dateFormat": "DD/MM/YYYY",
+            "sizes": {
+                "sx": 48,
+                "sy": 48,
+                "gx": 6,
+                "gy": 6,
+                "cx": 6,
+                "cy": 6,
+                "px": 0,
+                "py": 0
+            }
+        }
+    },
+    {
+        "id": "7b6c645b.5efc9c",
+        "type": "MySQLdatabase",
+        "name": "",
+        "host": "host.docker.internal",
+        "port": "3306",
+        "db": "NODERED",
+        "tz": "",
+        "charset": ""
+    },
+    {
+        "id": "e38ada7c23eea3a7",
+        "type": "global-config",
+        "name": "global-config",
+        "env": []
+    },
+    {
+        "id": "4e53f268.aaddbc",
+        "type": "ui_group",
+        "name": "LUCI",
+        "tab": "95d17d8a.8e1d8",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "95d17d8a.8e1d8",
+        "type": "ui_tab",
+        "name": "StreetScience",
+        "icon": "fa-bed",
+        "order": 5,
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "212c1de1.ea67e2",
+        "type": "ui_spacer",
+        "d": true,
+        "name": "spacer",
+        "group": "4e53f268.aaddbc",
+        "order": 1,
+        "width": 1,
+        "height": 1
+    },
+    {
+        "id": "dfafb391.8a17d",
+        "type": "influxdb",
+        "hostname": "192.168.2.231",
+        "port": "8086",
+        "protocol": "http",
+        "database": "electricpower",
+        "name": "",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://host.docker.internal:8086",
+        "timeout": "",
+        "rejectUnauthorized": true
+    },
+    {
+        "id": "3112eb76eeec366e",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "host.docker.internal",
+        "port": "1883",
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": "4",
+        "keepalive": "60",
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    },
+    {
+        "id": "f373fb80f9b86423",
+        "type": "amqp-broker",
+        "name": "",
+        "host": "host.docker.internal",
+        "port": "5672",
+        "vhost": "/",
+        "tls": false,
+        "credsFromSettings": false
+    },
+    {
+        "id": "ui-group",
+        "type": "ui_group",
+        "name": "Default",
+        "tab": "ui-tab",
+        "order": 1,
+        "disp": true,
+        "width": "6",
+        "collapse": false
+    },
+    {
+        "id": "ui-tab",
+        "type": "ui_tab",
+        "name": "IoT Dashboard",
+        "icon": "dashboard",
+        "disabled": false,
+        "hidden": false
+    },
+    {
+        "id": "mysql-config",
+        "type": "MySQLdatabase",
+        "name": "MySQL",
+        "host": "host.docker.internal",
+        "port": "3306",
+        "db": "IoTData"
+    },
+    {
+        "id": "09e52ac0d5efe734",
+        "type": "xmpp-server",
+        "server": "172.30.0.106",
+        "port": "5222",
+        "user": "iotdevice@localhost",
+        "nickname": "",
+        "resource": ""
+    },
+    {
+        "id": "5dbcf5dfa2242593",
+        "type": "xmpp-server",
+        "server": "172.30.0.106",
+        "port": "5222",
+        "user": "user1",
+        "nickname": "",
+        "resource": ""
+    },
+    {
+        "id": "1c5203f54951bf7a",
+        "type": "inject",
+        "z": "dae29d0432198ee9",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 240,
+        "y": 260,
+        "wires": [
+            [
+                "bf7324f2aabd204b"
+            ]
+        ]
+    },
+    {
+        "id": "b2f8793ee7d3d83d",
+        "type": "function",
+        "z": "dae29d0432198ee9",
+        "name": "function 1",
+        "func": "return msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 220,
+        "y": 380,
+        "wires": [
+            [
+                "b49d4bb8c8beb9b6"
+            ]
+        ]
+    },
+    {
+        "id": "b49d4bb8c8beb9b6",
+        "type": "debug",
+        "z": "dae29d0432198ee9",
+        "name": "debug 11",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 340,
+        "y": 460,
+        "wires": []
+    },
+    {
+        "id": "bf7324f2aabd204b",
+        "type": "http request",
+        "z": "dae29d0432198ee9",
+        "name": "",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date=2024-11-25&market=DayAhead&deliveryArea=FI&currency=EUR",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 450,
+        "y": 260,
+        "wires": [
+            [
+                "b2f8793ee7d3d83d"
+            ]
+        ]
+    }
+]

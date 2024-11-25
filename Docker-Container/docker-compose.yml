@@ -1,0 +1,65 @@
+# Use root/example as user/password credentials
+services:
+  node-red:
+    container_name: se4iot-project-node-red
+    build:
+      context: ./nodered-custom/
+      dockerfile: Dockerfile
+    image: custom_nodered:latest
+    environment:
+      - TZ=Europe/Amsterdam
+      - MYSQLUSERNAME=root
+      - MYSQLPASSWORD=example
+    ports:
+      - "1880:1880"
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.100
+    volumes:
+      - ./nodered-custom/data:/data
+
+
+  mosquitto:
+    container_name: se4iot-project-mosquitto
+    image: eclipse-mosquitto
+    volumes:
+    - ./mosquitto/config:/mosquitto/config
+    - ./mosquitto/log:/mosquitto/log
+    - ./mosquitto/data/:/mosquitto/data
+    restart: always
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.101
+    ports:
+    - "1883:1883" 
+
+
+  influxdb:
+    container_name: se4iot-project-influxdb
+    image: influxdb:2.7.4
+    ports:
+      - 8086:8086
+    volumes:
+      - ./influxdb/data:/var/lib/influxdb2
+      - ./influxdb/config:/etc/influxdb2
+    environment:
+      - DOCKER_INFLUXDB_INIT_MODE=setup
+      - DOCKER_INFLUXDB_INIT_USERNAME=admin
+      - DOCKER_INFLUXDB_INIT_PASSWORD=admin1234!
+      - DOCKER_INFLUXDB_INIT_ORG=univaq
+      - DOCKER_INFLUXDB_INIT_BUCKET=se4iot
+      - DOCKER_INFLUXDB_INIT_RETENTION=1w
+      - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A==
+    networks:
+      se4iot-network:
+        ipv4_address: 172.30.0.104
+
+
+
+networks:
+  se4iot-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.30.0.0/16
+
