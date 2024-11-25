@@ -1,7 +1,7 @@
 # Use root/example as user/password credentials
 services:
   node-red:
-    container_name: se4iot-project-node-red
+    container_name: peakflip-project-node-red
     build:
       context: ./nodered-custom/
       dockerfile: Dockerfile
@@ -13,14 +13,14 @@ services:
     ports:
       - "1880:1880"
     networks:
-      se4iot-network:
-        ipv4_address: 172.30.0.100
+      peakflip-network:
+        ipv4_address: 172.31.0.100
     volumes:
       - ./nodered-custom/data:/data
 
 
   mosquitto:
-    container_name: se4iot-project-mosquitto
+    container_name: peakflip-project-mosquitto
     image: eclipse-mosquitto
     volumes:
     - ./mosquitto/config:/mosquitto/config
@@ -28,14 +28,14 @@ services:
     - ./mosquitto/data/:/mosquitto/data
     restart: always
     networks:
-      se4iot-network:
-        ipv4_address: 172.30.0.101
+      peakflip-network:
+        ipv4_address: 172.31.0.101
     ports:
     - "1883:1883" 
 
 
   influxdb:
-    container_name: se4iot-project-influxdb
+    container_name: peakflip-project-influxdb
     image: influxdb:2.7.4
     ports:
       - 8086:8086
@@ -51,15 +51,15 @@ services:
       - DOCKER_INFLUXDB_INIT_RETENTION=1w
       - DOCKER_INFLUXDB_INIT_ADMIN_TOKEN=Ga8nVsXP4FAe5_M1a5j7uCa4zO_u_M9oUsO8wUSWh_wPbR3clc9ZTv420Li9adOVCPl1tGvn6hLHfI5gP7Lm5A==
     networks:
-      se4iot-network:
-        ipv4_address: 172.30.0.104
+      peakflip-network:
+        ipv4_address: 172.31.0.104
 
 
 
 networks:
-  se4iot-network:
+  peakflip-network:
     driver: bridge
     ipam:
       config:
-        - subnet: 172.30.0.0/16
+        - subnet: 172.31.0.0/16
 
