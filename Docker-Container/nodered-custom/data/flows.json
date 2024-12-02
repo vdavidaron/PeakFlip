@@ -8,52 +8,12 @@
         "env": []
     },
     {
-        "id": "a928ba0.2d1f748",
-        "type": "mqtt-broker",
-        "name": "",
-        "broker": "172.30.0.101",
-        "port": "1883",
-        "clientid": "",
-        "autoConnect": true,
-        "usetls": false,
-        "compatmode": false,
-        "protocolVersion": "4",
-        "keepalive": "60",
-        "cleansession": true,
-        "autoUnsubscribe": true,
-        "birthTopic": "",
-        "birthQos": "0",
-        "birthPayload": "",
-        "birthMsg": {},
-        "closeTopic": "",
-        "closeQos": "0",
-        "closePayload": "",
-        "closeMsg": {},
-        "willTopic": "",
-        "willQos": "0",
-        "willPayload": "",
-        "willMsg": {},
-        "userProps": "",
-        "sessionExpiry": ""
-    },
-    {
-        "id": "0648859e6711c8f9",
-        "type": "ui_tab",
-        "name": "Sensors",
-        "icon": "dashboard",
+        "id": "f61c2b29ea14be48",
+        "type": "tab",
+        "label": "Test MQTT",
         "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "40213cc014bd0905",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "0648859e6711c8f9",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false,
-        "className": ""
+        "info": "",
+        "env": []
     },
     {
         "id": "ae2aceeadfb4b296",
@@ -153,30 +113,10 @@
         }
     },
     {
-        "id": "7b6c645b.5efc9c",
-        "type": "MySQLdatabase",
-        "name": "",
-        "host": "host.docker.internal",
-        "port": "3306",
-        "db": "NODERED",
-        "tz": "",
-        "charset": ""
-    },
-    {
         "id": "e38ada7c23eea3a7",
         "type": "global-config",
         "name": "global-config",
         "env": []
-    },
-    {
-        "id": "4e53f268.aaddbc",
-        "type": "ui_group",
-        "name": "LUCI",
-        "tab": "95d17d8a.8e1d8",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
     },
     {
         "id": "95d17d8a.8e1d8",
@@ -188,35 +128,10 @@
         "hidden": false
     },
     {
-        "id": "212c1de1.ea67e2",
-        "type": "ui_spacer",
-        "d": true,
-        "name": "spacer",
-        "group": "4e53f268.aaddbc",
-        "order": 1,
-        "width": 1,
-        "height": 1
-    },
-    {
-        "id": "dfafb391.8a17d",
-        "type": "influxdb",
-        "hostname": "192.168.2.231",
-        "port": "8086",
-        "protocol": "http",
-        "database": "electricpower",
-        "name": "",
-        "usetls": false,
-        "tls": "",
-        "influxdbVersion": "2.0",
-        "url": "http://host.docker.internal:8086",
-        "timeout": "",
-        "rejectUnauthorized": true
-    },
-    {
-        "id": "3112eb76eeec366e",
+        "id": "ab54eb197c955ed0",
         "type": "mqtt-broker",
-        "name": "",
-        "broker": "host.docker.internal",
+        "name": "MQTT docker",
+        "broker": "tcp://host.docker.internal",
         "port": "1883",
         "clientid": "",
         "autoConnect": true,
@@ -244,40 +159,19 @@
         "sessionExpiry": ""
     },
     {
-        "id": "f373fb80f9b86423",
-        "type": "amqp-broker",
-        "name": "",
-        "host": "host.docker.internal",
-        "port": "5672",
-        "vhost": "/",
-        "tls": false,
-        "credsFromSettings": false
-    },
-    {
-        "id": "ui-group",
-        "type": "ui_group",
-        "name": "Default",
-        "tab": "ui-tab",
-        "order": 1,
-        "disp": true,
-        "width": "6",
-        "collapse": false
-    },
-    {
-        "id": "ui-tab",
-        "type": "ui_tab",
-        "name": "IoT Dashboard",
-        "icon": "dashboard",
-        "disabled": false,
-        "hidden": false
-    },
-    {
-        "id": "mysql-config",
-        "type": "MySQLdatabase",
-        "name": "MySQL",
-        "host": "host.docker.internal",
-        "port": "3306",
-        "db": "IoTData"
+        "id": "5bc7043e36b5ea36",
+        "type": "influxdb",
+        "hostname": "host.docker.internal",
+        "port": "8086",
+        "protocol": "http",
+        "database": "database",
+        "name": "InfluxDB",
+        "usetls": false,
+        "tls": "",
+        "influxdbVersion": "2.0",
+        "url": "http://host.docker.internal:8086",
+        "timeout": "10",
+        "rejectUnauthorized": true
     },
     {
         "id": "1c5203f54951bf7a",
@@ -293,18 +187,18 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "86400",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 240,
-        "y": 260,
+        "x": 130,
+        "y": 100,
         "wires": [
             [
-                "bf7324f2aabd204b"
+                "c9bdb6d2675a3b81"
             ]
         ]
     },
@@ -313,18 +207,19 @@
         "type": "function",
         "z": "dae29d0432198ee9",
         "name": "function 1",
-        "func": "return msg;",
+        "func": "let prices = JSON.parse(msg.payload).multiAreaEntries;\nlet formattedData = prices.map(price => {\n    return {\n        measurement: \"electricity_price\",\n        tags: {\n            \"deliveryArea\": \"FI\",\n            \"currency\": \"EUR\"\n        },\n        fields: {\n            \"price\": price.entryPerArea.FI // The price value, assuming it's in 'price'\n        },\n        timestamp: new Date(price.deliveryStart).getTime() // Convert to nanoseconds\n    };\n});\n\n// Return the formatted data as msg.payload (Array of points for InfluxDB)\nmsg.payload = formattedData;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 220,
-        "y": 380,
+        "x": 240,
+        "y": 260,
         "wires": [
             [
-                "b49d4bb8c8beb9b6"
+                "b49d4bb8c8beb9b6",
+                "da11170d9ba45afb"
             ]
         ]
     },
@@ -337,7 +232,8 @@
         "tosidebar": true,
         "console": false,
         "tostatus": false,
-        "complete": "false",
+        "complete": "payload",
+        "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
         "x": 340,
@@ -352,7 +248,7 @@
         "method": "GET",
         "ret": "txt",
         "paytoqs": "ignore",
-        "url": "https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date=2024-11-25&market=DayAhead&deliveryArea=FI&currency=EUR",
+        "url": "https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date={{{date}}}&market=DayAhead&deliveryArea=FI&currency=EUR",
         "tls": "",
         "persist": false,
         "proxy": "",
@@ -360,12 +256,219 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 450,
-        "y": 260,
+        "x": 550,
+        "y": 180,
         "wires": [
             [
                 "b2f8793ee7d3d83d"
             ]
         ]
+    },
+    {
+        "id": "c9bdb6d2675a3b81",
+        "type": "function",
+        "z": "dae29d0432198ee9",
+        "name": "function 4",
+        "func": "const baseUrl = \"https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date={{msg.date}}&market=DayAhead&deliveryArea=FI&currency=EUR\";\n\nconst today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based\nconst dd = String(today.getDate()).padStart(2, '0');\n\nmsg.dateParam = `${yyyy}-${mm}-${dd}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 300,
+        "y": 100,
+        "wires": [
+            [
+                "c11980994d52b0f1"
+            ]
+        ]
+    },
+    {
+        "id": "c11980994d52b0f1",
+        "type": "change",
+        "z": "dae29d0432198ee9",
+        "name": "",
+        "rules": [
+            {
+                "t": "set",
+                "p": "date",
+                "pt": "msg",
+                "to": "dateParam",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 470,
+        "y": 100,
+        "wires": [
+            [
+                "bf7324f2aabd204b"
+            ]
+        ]
+    },
+    {
+        "id": "da11170d9ba45afb",
+        "type": "influxdb batch",
+        "z": "dae29d0432198ee9",
+        "influxdb": "5bc7043e36b5ea36",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univaq",
+        "bucket": "se4iot",
+        "x": 500,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "b6b5d27157600e77",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "/test",
+        "payload": "",
+        "payloadType": "date",
+        "x": 180,
+        "y": 100,
+        "wires": [
+            [
+                "e485b1a2f8e01daf"
+            ]
+        ]
+    },
+    {
+        "id": "46b3552681a72602",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/test",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 570,
+        "y": 100,
+        "wires": []
+    },
+    {
+        "id": "3726dd759abf57ad",
+        "type": "mqtt in",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/test",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab54eb197c955ed0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 290,
+        "y": 200,
+        "wires": [
+            [
+                "60e579584b183408"
+            ]
+        ]
+    },
+    {
+        "id": "60e579584b183408",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "function 2",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 440,
+        "y": 200,
+        "wires": [
+            [
+                "bd44fa3d34bb1af9",
+                "8c2bd301882ad0e0"
+            ]
+        ]
+    },
+    {
+        "id": "bd44fa3d34bb1af9",
+        "type": "debug",
+        "z": "f61c2b29ea14be48",
+        "name": "debug 12",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 620,
+        "y": 200,
+        "wires": []
+    },
+    {
+        "id": "e485b1a2f8e01daf",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "function 3",
+        "func": "msg.payload = Math.random() * (25 - 15) + 15;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 380,
+        "y": 100,
+        "wires": [
+            [
+                "46b3552681a72602"
+            ]
+        ]
+    },
+    {
+        "id": "8c2bd301882ad0e0",
+        "type": "influxdb out",
+        "z": "f61c2b29ea14be48",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "",
+        "measurement": "test",
+        "precision": "",
+        "retentionPolicy": "",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univaq",
+        "bucket": "se4iot",
+        "x": 650,
+        "y": 260,
+        "wires": []
     }
 ]
