@@ -53,8 +53,23 @@ services:
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.104
-
-
+  
+  grafana:
+    image: grafana/grafana:latest
+    container_name: peakflip-grafana
+    restart: always
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./grafana/var:/var/lib/grafana
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+    depends_on:
+      - influxdb
+    networks:
+      peakflip-network:
+        ipv4_address: 172.31.0.105
 
 networks:
   peakflip-network:
