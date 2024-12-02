@@ -2,11 +2,6 @@
 Reducing electricity costs using an IoT system
 
 ## Background:
-Spot pricing became common with liberalising the electricity market
-Prices change frequently during the day
-With the widespread usage of renewable energy in the generation side made the market volatile
-When the sun shines the supply of electricity increases
-A supply-demand mismatch happens and the price decreases
-In the evening the demand increases but the supply decreases
-Which skyrocket the electricity price
-By purchasing the electricity during an off-peak the electricity bill can be reduced significantly
+As the electricity market in Europe becomes more and more liberal, spot pricing is now a norm. This change is largely due to the widespread renewable energy usage and supply-demand imbalance. With spot pricing, electricity prices fluctuate throughout the day, making energy costs unpredictable. For example, in the morning when the sun shines, solar energy boosts the electricity supply, dropping the electricity price. In contrast, in the evening, supply decreases and demand goes up, prices can skyrocket. This leads to the need for a solution to utilize electricity bills, like purchasing electricity during an off-peak while still maintaining the necessary electricity usage.
+
+We propose an IoT-based smart house system solution, PeakFlip, by taking advantage of fluctuating spot prices. This system automates electricity usage during low-price periods, helping consumers lower their energy costs. Additionally, PeakFlip sends alerts if predicted electricity consumption exceeds a pre-set threshold or if peak electricity price hours are coming. To demonstrate its functionality, we simulated a smart water boiler that regularly measures water level, as well as inside and outside temperature. The simulated device aims to reduce electricity consumption while maintaining a comfortable water temperature. 
