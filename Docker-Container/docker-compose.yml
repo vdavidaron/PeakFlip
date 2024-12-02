@@ -1,7 +1,7 @@
 # Use root/example as user/password credentials
 services:
   node-red:
-    container_name: peakflip-project-node-red
+    container_name: peakflip-node-red
     build:
       context: ./nodered-custom/
       dockerfile: Dockerfile
@@ -20,7 +20,7 @@ services:
 
 
   mosquitto:
-    container_name: peakflip-project-mosquitto
+    container_name: peakflip-mosquitto
     image: eclipse-mosquitto
     volumes:
     - ./mosquitto/config:/mosquitto/config
@@ -35,7 +35,7 @@ services:
 
 
   influxdb:
-    container_name: peakflip-project-influxdb
+    container_name: peakflip-influxdb
     image: influxdb:2.7.4
     ports:
       - 8086:8086
@@ -70,6 +70,23 @@ services:
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.105
+  
+  telegraf:
+    image: telegraf
+    container_name: peakflip-telegraf
+    restart: always
+    volumes:
+    - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+    depends_on:
+      - influxdb
+      - mosquitto
+    links:
+      - influxdb
+    ports:
+      - '8125:8125'    
+    networks:
+      peakflip-network:
+        ipv4_address: 172.31.0.102
 
 networks:
   peakflip-network:

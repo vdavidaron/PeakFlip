@@ -2,7 +2,7 @@
     {
         "id": "dae29d0432198ee9",
         "type": "tab",
-        "label": "Flow 1",
+        "label": "Get electricity price and sensor data",
         "disabled": false,
         "info": "",
         "env": []
@@ -177,7 +177,7 @@
         "id": "1c5203f54951bf7a",
         "type": "inject",
         "z": "dae29d0432198ee9",
-        "name": "",
+        "name": "Interval",
         "props": [
             {
                 "p": "payload"
@@ -194,7 +194,7 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 130,
+        "x": 120,
         "y": 100,
         "wires": [
             [
@@ -206,7 +206,7 @@
         "id": "b2f8793ee7d3d83d",
         "type": "function",
         "z": "dae29d0432198ee9",
-        "name": "function 1",
+        "name": "Parse data",
         "func": "let prices = JSON.parse(msg.payload).multiAreaEntries;\nlet formattedData = prices.map(price => {\n    return {\n        measurement: \"electricity_price\",\n        tags: {\n            \"deliveryArea\": \"FI\",\n            \"currency\": \"EUR\"\n        },\n        fields: {\n            \"price\": price.entryPerArea.FI // The price value, assuming it's in 'price'\n        },\n        timestamp: new Date(price.deliveryStart).getTime() // Convert to nanoseconds\n    };\n});\n\n// Return the formatted data as msg.payload (Array of points for InfluxDB)\nmsg.payload = formattedData;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -214,8 +214,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 240,
-        "y": 260,
+        "x": 670,
+        "y": 160,
         "wires": [
             [
                 "b49d4bb8c8beb9b6",
@@ -227,7 +227,7 @@
         "id": "b49d4bb8c8beb9b6",
         "type": "debug",
         "z": "dae29d0432198ee9",
-        "name": "debug 11",
+        "name": "Debug parsed data",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -236,15 +236,15 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 340,
-        "y": 460,
+        "x": 870,
+        "y": 160,
         "wires": []
     },
     {
         "id": "bf7324f2aabd204b",
         "type": "http request",
         "z": "dae29d0432198ee9",
-        "name": "",
+        "name": "Get spot price",
         "method": "GET",
         "ret": "txt",
         "paytoqs": "ignore",
@@ -256,12 +256,11 @@
         "authType": "",
         "senderr": false,
         "headers": [],
-        "x": 550,
-        "y": 180,
+        "x": 800,
+        "y": 100,
         "wires": [
             [
-                "b2f8793ee7d3d83d",
-                "51cc2a70441756fc"
+                "b2f8793ee7d3d83d"
             ]
         ]
     },
@@ -269,15 +268,15 @@
         "id": "c9bdb6d2675a3b81",
         "type": "function",
         "z": "dae29d0432198ee9",
-        "name": "function 4",
-        "func": "const baseUrl = \"https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date={{msg.date}}&market=DayAhead&deliveryArea=FI&currency=EUR\";\n\nconst today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based\nconst dd = String(today.getDate()).padStart(2, '0');\n\nmsg.dateParam = `${yyyy}-${mm}-${dd}`;\nreturn msg;",
+        "name": "Set date parameter",
+        "func": "const today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based\nconst dd = String(today.getDate()).padStart(2, '0');\n\nmsg.dateParam = `${yyyy}-${mm}-${dd}`;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 300,
+        "x": 310,
         "y": 100,
         "wires": [
             [
@@ -289,7 +288,7 @@
         "id": "c11980994d52b0f1",
         "type": "change",
         "z": "dae29d0432198ee9",
-        "name": "",
+        "name": "Change date parameter",
         "rules": [
             {
                 "t": "set",
@@ -304,7 +303,7 @@
         "from": "",
         "to": "",
         "reg": false,
-        "x": 470,
+        "x": 570,
         "y": 100,
         "wires": [
             [
@@ -313,36 +312,20 @@
         ]
     },
     {
-        "id": "51cc2a70441756fc",
-        "type": "debug",
-        "z": "dae29d0432198ee9",
-        "name": "debug 13",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 680,
-        "y": 100,
-        "wires": []
-    },
-    {
         "id": "da11170d9ba45afb",
         "type": "influxdb batch",
         "z": "dae29d0432198ee9",
         "influxdb": "5bc7043e36b5ea36",
         "precision": "",
         "retentionPolicy": "",
-        "name": "",
+        "name": "Save sport price to InfluxDB",
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
         "org": "univaq",
         "bucket": "se4iot",
-        "x": 500,
-        "y": 320,
+        "x": 900,
+        "y": 220,
         "wires": []
     },
     {
@@ -353,20 +336,16 @@
         "props": [
             {
                 "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "5",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
-        "topic": "/test",
+        "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 180,
+        "x": 170,
         "y": 100,
         "wires": [
             [
@@ -379,7 +358,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/test",
+        "topic": "/home_1/device_1/water_temperature",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -388,7 +367,7 @@
         "correl": "",
         "expiry": "",
         "broker": "ab54eb197c955ed0",
-        "x": 570,
+        "x": 770,
         "y": 100,
         "wires": []
     },
@@ -397,7 +376,7 @@
         "type": "mqtt in",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/test",
+        "topic": "/home_1/device_1/water_temperature",
         "qos": "2",
         "datatype": "auto-detect",
         "broker": "ab54eb197c955ed0",
@@ -405,8 +384,8 @@
         "rap": true,
         "rh": 0,
         "inputs": 0,
-        "x": 290,
-        "y": 200,
+        "x": 230,
+        "y": 380,
         "wires": [
             [
                 "60e579584b183408"
@@ -425,12 +404,11 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 440,
-        "y": 200,
+        "x": 480,
+        "y": 380,
         "wires": [
             [
-                "bd44fa3d34bb1af9",
-                "8c2bd301882ad0e0"
+                "bd44fa3d34bb1af9"
             ]
         ]
     },
@@ -446,23 +424,23 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 620,
-        "y": 200,
+        "x": 660,
+        "y": 380,
         "wires": []
     },
     {
         "id": "e485b1a2f8e01daf",
         "type": "function",
         "z": "f61c2b29ea14be48",
-        "name": "function 3",
-        "func": "msg.payload = Math.random() * (25 - 15) + 15;\nreturn msg;",
+        "name": "Generate water temperature",
+        "func": "let temperature = Math.random() * (25 - 15) + 15;\nmsg.payload = {\n    \"water_temperature\": temperature\n}; \nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 380,
+        "x": 440,
         "y": 100,
         "wires": [
             [
@@ -484,8 +462,197 @@
         "retentionPolicyV18Flux": "",
         "org": "univaq",
         "bucket": "se4iot",
-        "x": 650,
-        "y": 260,
+        "x": 690,
+        "y": 440,
         "wires": []
+    },
+    {
+        "id": "d0c890d79b973527",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 160,
+        "wires": [
+            [
+                "a8bab6bb8b645186"
+            ]
+        ]
+    },
+    {
+        "id": "9f8ffebcd43f3319",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_1/device_1/water_level",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 710,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "a8bab6bb8b645186",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate water level",
+        "func": "let water_level = Math.random() * (200 - 100) + 100;\nmsg.payload = {\n    \"water_level\": water_level\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 160,
+        "wires": [
+            [
+                "9f8ffebcd43f3319"
+            ]
+        ]
+    },
+    {
+        "id": "2c0416c6bcb21fee",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 220,
+        "wires": [
+            [
+                "83f91115bfa8ba23"
+            ]
+        ]
+    },
+    {
+        "id": "58c59337239ba2df",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_1/device_1/outside_temperature",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 780,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "83f91115bfa8ba23",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate outside temperature",
+        "func": "let tmp = Math.random() * (20 - 10) + 10;\nmsg.payload = {\n    \"outside_temperature\": tmp\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 220,
+        "wires": [
+            [
+                "58c59337239ba2df"
+            ]
+        ]
+    },
+    {
+        "id": "67144ee9599e8e40",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 280,
+        "wires": [
+            [
+                "25df984b54a94f6c"
+            ]
+        ]
+    },
+    {
+        "id": "39ce3d6625e0d1b1",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_1/device_1/electricity_consumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 790,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "25df984b54a94f6c",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate consumed electricity",
+        "func": "let tmp = Math.random() * 10;\nmsg.payload = {\n    \"electricity_consumption\": tmp\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 280,
+        "wires": [
+            [
+                "39ce3d6625e0d1b1"
+            ]
+        ]
     }
 ]
