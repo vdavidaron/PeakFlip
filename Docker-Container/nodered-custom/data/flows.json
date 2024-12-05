@@ -16,6 +16,14 @@
         "env": []
     },
     {
+        "id": "92e6fe23111f8499",
+        "type": "tab",
+        "label": "Calculate electricity bill",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "ae2aceeadfb4b296",
         "type": "ui_base",
         "theme": {
@@ -117,15 +125,6 @@
         "type": "global-config",
         "name": "global-config",
         "env": []
-    },
-    {
-        "id": "95d17d8a.8e1d8",
-        "type": "ui_tab",
-        "name": "StreetScience",
-        "icon": "fa-bed",
-        "order": 5,
-        "disabled": false,
-        "hidden": false
     },
     {
         "id": "ab54eb197c955ed0",
@@ -318,7 +317,7 @@
         "influxdb": "5bc7043e36b5ea36",
         "precision": "",
         "retentionPolicy": "",
-        "name": "Save sport price to InfluxDB",
+        "name": "Save spot price to InfluxDB",
         "database": "database",
         "precisionV18FluxV20": "ms",
         "retentionPolicyV18Flux": "",
@@ -717,5 +716,294 @@
                 "44f05c6d6a197422"
             ]
         ]
+    },
+    {
+        "id": "b1efd36f9ec02832",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 600,
+        "wires": [
+            [
+                "b62720cdf6139c14"
+            ]
+        ]
+    },
+    {
+        "id": "c3ac45733d5e2e8c",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_1/device_2/electricity_consumption",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 750,
+        "y": 600,
+        "wires": []
+    },
+    {
+        "id": "b62720cdf6139c14",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate consumed electricity",
+        "func": "let tmp = Math.random() * 10;\nmsg.payload = {\n    \"electricity_consumption\": tmp\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 600,
+        "wires": [
+            [
+                "c3ac45733d5e2e8c"
+            ]
+        ]
+    },
+    {
+        "id": "07aa600166cdc16e",
+        "type": "inject",
+        "z": "92e6fe23111f8499",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 220,
+        "y": 140,
+        "wires": [
+            [
+                "db811a4e9d3a0247",
+                "ad239bb6dac6208f"
+            ]
+        ]
+    },
+    {
+        "id": "db811a4e9d3a0247",
+        "type": "influxdb in",
+        "z": "92e6fe23111f8499",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -1h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_price\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "4c1c0ac8738f9c95"
+            ]
+        ]
+    },
+    {
+        "id": "91ec816acad15318",
+        "type": "debug",
+        "z": "92e6fe23111f8499",
+        "name": "Debug price data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 630,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "56c20701c5f85735",
+        "type": "function",
+        "z": "92e6fe23111f8499",
+        "name": "Total electricity used",
+        "func": "function roundUpToDecimals(number, decimals) {\n    const factor = Math.pow(10, decimals);\n    return Math.ceil(number * factor) / factor;\n}\n\nlet rawDataList = msg.payload;\nconst regex = /\\/([^/]+)\\/([^/]+)/;\n\nlet dataMap = rawDataList.reduce((acc, obj) => {\n  // Generate a unique key using Key1 and key2\n  const key = obj.topic;\n\n  // Check if the group (key) already exists in accumulator\n  if (!acc[key]) {\n    const match = key.match(regex);\n\n    if (match) {\n      const home = match[1]; // home_1\n      const device = match[2]; // device_1\n      // If not, initialize the group with the current object\n      acc[key] = { home: home, device: device, value: 0 };\n    }\n  }\n\n  // Add the value to the corresponding group\n  acc[key].value += obj._value;\n\n  return acc;\n}, {});\n// let dataList = rawDataList.map(data => {\n//     return data._value\n// });\n\n// Return the sum\n// msg.payload = roundUpToDecimals(dataList.reduce((accumulator, currentValue) => accumulator + currentValue, 0), 2);\nmsg.payload = Object.values(dataMap);\nmsg.topic = \"electricity_consumption\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 600,
+        "y": 240,
+        "wires": [
+            [
+                "0e9f90eb60ed85cc"
+            ]
+        ]
+    },
+    {
+        "id": "ad239bb6dac6208f",
+        "type": "influxdb in",
+        "z": "92e6fe23111f8499",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -10s)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\" and r[\"_field\"] == \"electricity_consumption\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 360,
+        "y": 240,
+        "wires": [
+            [
+                "56c20701c5f85735"
+            ]
+        ]
+    },
+    {
+        "id": "413837d91a6f574f",
+        "type": "debug",
+        "z": "92e6fe23111f8499",
+        "name": "Debug consumption data",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 670,
+        "y": 320,
+        "wires": []
+    },
+    {
+        "id": "0e9f90eb60ed85cc",
+        "type": "join",
+        "z": "92e6fe23111f8499",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 830,
+        "y": 180,
+        "wires": [
+            [
+                "5956a9fe02917ad7"
+            ]
+        ]
+    },
+    {
+        "id": "de51da257ed11686",
+        "type": "debug",
+        "z": "92e6fe23111f8499",
+        "name": "debug 14",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1220,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "5956a9fe02917ad7",
+        "type": "function",
+        "z": "92e6fe23111f8499",
+        "name": "Energy cost by device",
+        "func": "let price = msg.payload.price;\nlet consumptionList = msg.payload.electricity_consumption; // 42\n\n// EUR = EUR/MWh * Wh / 10e6\nlet costList = consumptionList.map(data => {\n    return {\n        measurement: \"electricity_cost\",\n        tags: {\n            \"home\": data.home,\n            \"device\": data.device,\n            \"currency\": \"EUR\"\n        },\n        fields: {\n            \"cost\": data.value * price / 1000000\n        },\n        timestamp: new Date().getTime()\n    };\n});\nmsg.payload = costList;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1020,
+        "y": 180,
+        "wires": [
+            [
+                "de51da257ed11686",
+                "7b88b269e79082a4"
+            ]
+        ]
+    },
+    {
+        "id": "4c1c0ac8738f9c95",
+        "type": "function",
+        "z": "92e6fe23111f8499",
+        "name": "Price",
+        "func": "msg.payload = msg.payload[0]._value;\nmsg.topic = \"price\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 610,
+        "y": 160,
+        "wires": [
+            [
+                "0e9f90eb60ed85cc"
+            ]
+        ]
+    },
+    {
+        "id": "7b88b269e79082a4",
+        "type": "influxdb batch",
+        "z": "92e6fe23111f8499",
+        "influxdb": "5bc7043e36b5ea36",
+        "precision": "",
+        "retentionPolicy": "",
+        "name": "Save cost to InfluxDB",
+        "database": "database",
+        "precisionV18FluxV20": "ms",
+        "retentionPolicyV18Flux": "",
+        "org": "univaq",
+        "bucket": "se4iot",
+        "x": 1100,
+        "y": 240,
+        "wires": []
     }
 ]

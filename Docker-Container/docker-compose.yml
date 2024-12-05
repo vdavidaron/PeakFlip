@@ -26,7 +26,6 @@ services:
     - ./mosquitto/config:/mosquitto/config
     - ./mosquitto/log:/mosquitto/log
     - ./mosquitto/data/:/mosquitto/data
-    restart: always
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.101
@@ -57,7 +56,6 @@ services:
   grafana:
     image: grafana/grafana:latest
     container_name: peakflip-grafana
-    restart: always
     ports:
       - "3000:3000"
     volumes:
@@ -74,7 +72,6 @@ services:
   telegraf:
     image: telegraf
     container_name: peakflip-telegraf
-    restart: always
     volumes:
     - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
