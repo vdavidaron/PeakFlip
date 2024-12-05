@@ -24,6 +24,14 @@
         "env": []
     },
     {
+        "id": "068878340fe2503c",
+        "type": "tab",
+        "label": "Telegram",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "ae2aceeadfb4b296",
         "type": "ui_base",
         "theme": {
@@ -169,8 +177,34 @@
         "tls": "",
         "influxdbVersion": "2.0",
         "url": "http://host.docker.internal:8086",
-        "timeout": "10",
         "rejectUnauthorized": true
+    },
+    {
+        "id": "c746fed15930be8e",
+        "type": "telegram bot",
+        "botname": "Peakflip",
+        "usernames": "",
+        "chatids": "",
+        "baseapiurl": "",
+        "testenvironment": false,
+        "updatemode": "polling",
+        "addressfamily": "",
+        "pollinterval": "300",
+        "usesocks": false,
+        "sockshost": "",
+        "socksprotocol": "socks5",
+        "socksport": "6667",
+        "socksusername": "anonymous",
+        "sockspassword": "",
+        "bothost": "",
+        "botpath": "",
+        "localbotport": "8443",
+        "publicbotport": "8443",
+        "privatekey": "",
+        "certificate": "",
+        "useselfsignedcertificate": false,
+        "sslterminated": false,
+        "verboselogging": false
     },
     {
         "id": "1c5203f54951bf7a",
@@ -1005,5 +1039,141 @@
         "x": 1100,
         "y": 240,
         "wires": []
+    },
+    {
+        "id": "c8946da30ba260ac",
+        "type": "telegram sender",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 600,
+        "y": 460,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "46e21abc428a8c91",
+        "type": "telegram receiver",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 180,
+        "y": 140,
+        "wires": [
+            [
+                "c60247538ac52a4f"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "2e53fe86a63f2524",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Telegram Message",
+        "func": "let priceArr = msg.payload\n\nmsg.payload = {}\nmsg.payload.chatId = global.get(\"ChatID\");\nmsg.payload.type = \"message\";\n\nmsg.payload.content = priceArr.map(x => {\n    let date = new Date(x._time); \n    let hours = date.getUTCHours(); \n    let minutes = date.getUTCMinutes(); \n    let ampm = hours >= 12 ? \"PM\" : \"AM\";\n    hours = hours % 12 || 12; \n    minutes = minutes < 10 ? \"0\" + minutes : minutes; \n\n    return {\n        time: `${hours}:${minutes} ${ampm}`,\n        value: x._value\n    };\n});\n\nmsg.payload.content = msg.payload.content\n    .map(item => `Time: ${item.time}, Value: ${item.value}`)\n    .join(\"; \\n\");\n\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 380,
+        "wires": [
+            [
+                "c8946da30ba260ac"
+            ]
+        ]
+    },
+    {
+        "id": "c60247538ac52a4f",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Set ChatID",
+        "func": "msg.payload.content === \"/start\" ? global.set(\"ChatID\", msg.payload.chatId) : \"\";\nmsg.payload = global.get(\"ChatID\");\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 390,
+        "y": 140,
+        "wires": [
+            [
+                "50ee66b67f5340bf"
+            ]
+        ]
+    },
+    {
+        "id": "50ee66b67f5340bf",
+        "type": "debug",
+        "z": "068878340fe2503c",
+        "name": "Show ChatID",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "fd555ec6ee3b2d51",
+        "type": "inject",
+        "z": "068878340fe2503c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 100,
+        "y": 260,
+        "wires": [
+            [
+                "51d4513897f618f9"
+            ]
+        ]
+    },
+    {
+        "id": "51d4513897f618f9",
+        "type": "influxdb in",
+        "z": "068878340fe2503c",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "Get Electricity Consumption",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -6h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_price\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 300,
+        "y": 300,
+        "wires": [
+            [
+                "2e53fe86a63f2524"
+            ]
+        ]
     }
 ]

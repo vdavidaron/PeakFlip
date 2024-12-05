@@ -6,6 +6,7 @@
     "dependencies": {
         "@meowwolf/node-red-contrib-amqp": "~2.4.2",
         "node-red-contrib-influxdb": "~0.6.1",
+        "node-red-contrib-telegrambot": "~16.1.0",
         "node-red-node-xmpp": "~0.6.3"
     }
 }
