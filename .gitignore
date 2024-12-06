@@ -1,1 +1,2 @@
 *.DS_Store
+Docker-Container/nodered-custom/data/node_modules
