@@ -32,6 +32,14 @@
         "env": []
     },
     {
+        "id": "a0e1bc1a96c71d2f",
+        "type": "tab",
+        "label": "Actuator",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
         "id": "ae2aceeadfb4b296",
         "type": "ui_base",
         "theme": {
@@ -815,6 +823,69 @@
         ]
     },
     {
+        "id": "d79420a5f7c0509a",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 660,
+        "wires": [
+            [
+                "c18157e6b2109f92"
+            ]
+        ]
+    },
+    {
+        "id": "f89f6e62037e44d3",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_1/device_2/water_level",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 690,
+        "y": 660,
+        "wires": []
+    },
+    {
+        "id": "c18157e6b2109f92",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate water level",
+        "func": "let water_level = Math.random() * (200 - 100) + 100;\nmsg.payload = {\n    \"water_level\": water_level\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 400,
+        "y": 660,
+        "wires": [
+            [
+                "f89f6e62037e44d3"
+            ]
+        ]
+    },
+    {
         "id": "07aa600166cdc16e",
         "type": "inject",
         "z": "92e6fe23111f8499",
@@ -1048,8 +1119,8 @@
         "bot": "c746fed15930be8e",
         "haserroroutput": false,
         "outputs": 1,
-        "x": 580,
-        "y": 300,
+        "x": 600,
+        "y": 460,
         "wires": [
             []
         ]
@@ -1083,8 +1154,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 350,
-        "y": 260,
+        "x": 450,
+        "y": 380,
         "wires": [
             [
                 "c8946da30ba260ac"
@@ -1150,7 +1221,7 @@
         "payload": "",
         "payloadType": "date",
         "x": 100,
-        "y": 440,
+        "y": 260,
         "wires": [
             [
                 "51d4513897f618f9"
@@ -1168,20 +1239,268 @@
         "precision": "",
         "retentionPolicy": "",
         "org": "univaq",
-        "x": 340,
-        "y": 440,
+        "x": 300,
+        "y": 300,
         "wires": [
             [
-                "ca21387b6685e890",
                 "2e53fe86a63f2524"
             ]
         ]
     },
     {
-        "id": "ca21387b6685e890",
+        "id": "76310f54410d763f",
+        "type": "mqtt in",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "topic": "/+/+/water_level",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab54eb197c955ed0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 160,
+        "y": 40,
+        "wires": [
+            [
+                "e48f6483c45e6329"
+            ]
+        ]
+    },
+    {
+        "id": "e48f6483c45e6329",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Validate water level",
+        "func": "const regex = /\\/([^/]+)\\/([^/]+)/;\nconst match = msg.topic.match(regex);\n\nif (match) {\n    const home = match[1]; // home_1\n    const device = match[2]; // device_1\n    if (msg.payload.water_level < 150) {\n        msg.topic = `/${home}/${device}/pump`;\n        msg.payload = 1;\n    }\n    else {\n        msg.topic = `/${home}/${device}/pump`;\n        msg.payload = 0;\n    }\n}\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 40,
+        "wires": [
+            [
+                "965d7599b055c1b2"
+            ]
+        ]
+    },
+    {
+        "id": "965d7599b055c1b2",
+        "type": "mqtt out",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Send message to actuator",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 740,
+        "y": 40,
+        "wires": []
+    },
+    {
+        "id": "9960deac8953d26f",
+        "type": "influxdb in",
+        "z": "a0e1bc1a96c71d2f",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "Get electricity price",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -1h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_price\")\n|> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 370,
+        "y": 120,
+        "wires": [
+            [
+                "620d2338e07efdbf"
+            ]
+        ]
+    },
+    {
+        "id": "75521254ebd67326",
+        "type": "inject",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 120,
+        "wires": [
+            [
+                "9960deac8953d26f",
+                "d903df0eb177ab52",
+                "3d1d15627c61d774"
+            ]
+        ]
+    },
+    {
+        "id": "d903df0eb177ab52",
+        "type": "influxdb in",
+        "z": "a0e1bc1a96c71d2f",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "Get water temperature",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -15m)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\" and r[\"_field\"] == \"water_temperature\")\n|> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 260,
+        "y": 220,
+        "wires": [
+            [
+                "7a10583985989a32"
+            ]
+        ]
+    },
+    {
+        "id": "3d1d15627c61d774",
+        "type": "influxdb in",
+        "z": "a0e1bc1a96c71d2f",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "Get water level",
+        "query": "from(bucket: \"se4iot\")\n|> range(start: -1h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"mqtt_consumer\" and r[\"_field\"] == \"water_level\")\n|> last()",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 140,
+        "y": 280,
+        "wires": [
+            [
+                "bc225aacbbfd9a77"
+            ]
+        ]
+    },
+    {
+        "id": "519d3e4216cd34e9",
         "type": "debug",
-        "z": "068878340fe2503c",
-        "name": "debug 15",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 18",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 700,
+        "y": 220,
+        "wires": []
+    },
+    {
+        "id": "45682db92bf928c7",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 19",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 380,
+        "y": 420,
+        "wires": []
+    },
+    {
+        "id": "7a10583985989a32",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Water temperature",
+        "func": "const regex = /\\/([^/]+)\\/([^/]+)/;\nmsg.payload = msg.payload.map( e => {\n        const match = e.topic.match(regex);\n        if (match) {\n                const home = match[1]; // home_1\n                const device = match[2]; // device_1\n                // If not, initialize the group with the current object\n                return { id: `/${home}/${device}`, value: e._value };\n                }\n                return {}\n});\nmsg.topic = \"water_temperature\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 220,
+        "wires": [
+            [
+                "a7bce94a81f192a8"
+            ]
+        ]
+    },
+    {
+        "id": "69bbb25de7aaa14e",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Group by device",
+        "func": "function roundUpToDecimals(number, decimals) {\n    const factor = Math.pow(10, decimals);\n    return Math.ceil(number * factor) / factor;\n}\n\nlet rawDataList = msg.payload;\nlet device_map = {}\n\nlet temperature_list = msg.payload.water_temperature;\nlet level_list = msg.payload.water_level;\n\ntemperature_list.forEach(function(e) {\n  device_map[e.id] = {};\n  device_map[e.id][\"id\"] = e.id;\n  device_map[e.id][\"temperature\"] = e.value;\n});\n\nlevel_list.forEach(function(e) {\n  device_map[e.id][\"level\"] = e.value;\n});\nmsg.payload = Object.values(device_map);\nmsg.topic = \"devices\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 940,
+        "y": 280,
+        "wires": [
+            [
+                "8ec4dc5f90d9b351",
+                "fa6dde02f69d56bc"
+            ]
+        ]
+    },
+    {
+        "id": "a7bce94a81f192a8",
+        "type": "join",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Join by device",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 620,
+        "y": 280,
+        "wires": [
+            [
+                "69bbb25de7aaa14e"
+            ]
+        ]
+    },
+    {
+        "id": "fa6dde02f69d56bc",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 20",
         "active": true,
         "tosidebar": true,
         "console": false,
@@ -1190,8 +1509,262 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 600,
-        "y": 420,
+        "x": 920,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "bc225aacbbfd9a77",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Water level",
+        "func": "const regex = /\\/([^/]+)\\/([^/]+)/;\nmsg.payload = msg.payload.map( e => {\n        const match = e.topic.match(regex);\n        if (match) {\n                const home = match[1]; // home_1\n                const device = match[2]; // device_1\n                // If not, initialize the group with the current object\n                return { id: `/${home}/${device}`, value: e._value };\n                }\n                return {}\n});\nmsg.topic = \"water_level\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 410,
+        "y": 280,
+        "wires": [
+            [
+                "a7bce94a81f192a8"
+            ]
+        ]
+    },
+    {
+        "id": "031f62676f95c0a8",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 21",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 720,
+        "y": 360,
+        "wires": []
+    },
+    {
+        "id": "620d2338e07efdbf",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Price",
+        "func": "msg.payload = msg.payload[0]._value;\nmsg.topic = \"price\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 690,
+        "y": 120,
+        "wires": [
+            [
+                "8ec4dc5f90d9b351"
+            ]
+        ]
+    },
+    {
+        "id": "8ec4dc5f90d9b351",
+        "type": "join",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Join by device",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": false,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 1000,
+        "y": 180,
+        "wires": [
+            [
+                "ad190dcfda8a1845"
+            ]
+        ]
+    },
+    {
+        "id": "ad190dcfda8a1845",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Group by device",
+        "func": "let device_list = msg.payload.devices;\nlet price = msg.payload.price;\nlet messages = []\nlet payloads = []\nlet topics = []\n\ndevice_list.forEach(function(e) {\n  if (e.temperature < 20 && e.level > 100) {\n    payloads.push(1);\n    topics.push(`${e.id}/heater`);\n    msg.topic = `${e.id}/heater`;\n    messages.push({ topic: `${e.id}/heater`, payload: 1})\n  }\n});\nmsg.payload = messages;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1160,
+        "y": 240,
+        "wires": [
+            [
+                "1cefa5aabedd17f3",
+                "592cb6aa8c529f7c"
+            ]
+        ]
+    },
+    {
+        "id": "22d328c47bafc061",
+        "type": "mqtt out",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Send message to actuator",
+        "topic": "",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 1500,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "c996af533337a73c",
+        "type": "mqtt in",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "topic": "/+/+/heater",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "ab54eb197c955ed0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 180,
+        "y": 500,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "e501cfb78ff217e6",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "function 3",
+        "func": "\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 360,
+        "y": 480,
+        "wires": [
+            [
+                "14fce2cd3786f894"
+            ]
+        ]
+    },
+    {
+        "id": "14fce2cd3786f894",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 23",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 510,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "1cefa5aabedd17f3",
+        "type": "split",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "splt": "\\n",
+        "spltType": "str",
+        "arraySplt": 1,
+        "arraySpltType": "len",
+        "stream": false,
+        "addname": "",
+        "property": "payload",
+        "x": 1190,
+        "y": 340,
+        "wires": [
+            [
+                "0cec43d1695173e2"
+            ]
+        ]
+    },
+    {
+        "id": "0cec43d1695173e2",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "function 4",
+        "func": "// msg = { payload: msg.payload, topic: msg.payload.topic };\nreturn { payload: msg.payload.payload, topic: msg.payload.topic };",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1340,
+        "y": 300,
+        "wires": [
+            [
+                "b1af63c3525cc672",
+                "22d328c47bafc061"
+            ]
+        ]
+    },
+    {
+        "id": "b1af63c3525cc672",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 24",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1470,
+        "y": 340,
+        "wires": []
+    },
+    {
+        "id": "592cb6aa8c529f7c",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 25",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1290,
+        "y": 180,
         "wires": []
     }
 ]
