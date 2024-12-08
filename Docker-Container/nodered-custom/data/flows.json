@@ -24,17 +24,17 @@
         "env": []
     },
     {
-        "id": "068878340fe2503c",
+        "id": "a0e1bc1a96c71d2f",
         "type": "tab",
-        "label": "Telegram",
+        "label": "Actuator",
         "disabled": false,
         "info": "",
         "env": []
     },
     {
-        "id": "a0e1bc1a96c71d2f",
+        "id": "3ad31c0e616aeea9",
         "type": "tab",
-        "label": "Actuator",
+        "label": "Esp32 - Wokwi",
         "disabled": false,
         "info": "",
         "env": []
@@ -186,33 +186,6 @@
         "influxdbVersion": "2.0",
         "url": "http://host.docker.internal:8086",
         "rejectUnauthorized": true
-    },
-    {
-        "id": "c746fed15930be8e",
-        "type": "telegram bot",
-        "botname": "Peakflip",
-        "usernames": "",
-        "chatids": "",
-        "baseapiurl": "",
-        "testenvironment": false,
-        "updatemode": "polling",
-        "addressfamily": "",
-        "pollinterval": "300",
-        "usesocks": false,
-        "sockshost": "",
-        "socksprotocol": "socks5",
-        "socksport": "6667",
-        "socksusername": "anonymous",
-        "sockspassword": "",
-        "bothost": "",
-        "botpath": "",
-        "localbotport": "8443",
-        "publicbotport": "8443",
-        "privatekey": "",
-        "certificate": "",
-        "useselfsignedcertificate": false,
-        "sslterminated": false,
-        "verboselogging": false
     },
     {
         "id": "1c5203f54951bf7a",
@@ -1112,142 +1085,6 @@
         "wires": []
     },
     {
-        "id": "c8946da30ba260ac",
-        "type": "telegram sender",
-        "z": "068878340fe2503c",
-        "name": "",
-        "bot": "c746fed15930be8e",
-        "haserroroutput": false,
-        "outputs": 1,
-        "x": 600,
-        "y": 460,
-        "wires": [
-            []
-        ]
-    },
-    {
-        "id": "46e21abc428a8c91",
-        "type": "telegram receiver",
-        "z": "068878340fe2503c",
-        "name": "",
-        "bot": "c746fed15930be8e",
-        "saveDataDir": "",
-        "filterCommands": false,
-        "x": 180,
-        "y": 140,
-        "wires": [
-            [
-                "c60247538ac52a4f"
-            ],
-            []
-        ]
-    },
-    {
-        "id": "2e53fe86a63f2524",
-        "type": "function",
-        "z": "068878340fe2503c",
-        "name": "Telegram Message",
-        "func": "let priceArr = msg.payload\n\nmsg.payload = {}\nmsg.payload.chatId = global.get(\"ChatID\");\nmsg.payload.type = \"message\";\n\nmsg.payload.content = priceArr.map(x => {\n    let date = new Date(x._time); \n    let hours = date.getUTCHours(); \n    let minutes = date.getUTCMinutes(); \n    let ampm = hours >= 12 ? \"PM\" : \"AM\";\n    hours = hours % 12 || 12; \n    minutes = minutes < 10 ? \"0\" + minutes : minutes; \n\n    return {\n        time: `${hours}:${minutes} ${ampm}`,\n        value: x._value\n    };\n});\n\nmsg.payload.content = msg.payload.content\n    .map(item => `Time: ${item.time}, Value: ${item.value}`)\n    .join(\"; \\n\");\n\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 450,
-        "y": 380,
-        "wires": [
-            [
-                "c8946da30ba260ac"
-            ]
-        ]
-    },
-    {
-        "id": "c60247538ac52a4f",
-        "type": "function",
-        "z": "068878340fe2503c",
-        "name": "Set ChatID",
-        "func": "msg.payload.content === \"/start\" ? global.set(\"ChatID\", msg.payload.chatId) : \"\";\nmsg.payload = global.get(\"ChatID\");\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 390,
-        "y": 140,
-        "wires": [
-            [
-                "50ee66b67f5340bf"
-            ]
-        ]
-    },
-    {
-        "id": "50ee66b67f5340bf",
-        "type": "debug",
-        "z": "068878340fe2503c",
-        "name": "Show ChatID",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "payload",
-        "targetType": "msg",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 590,
-        "y": 120,
-        "wires": []
-    },
-    {
-        "id": "fd555ec6ee3b2d51",
-        "type": "inject",
-        "z": "068878340fe2503c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 100,
-        "y": 260,
-        "wires": [
-            [
-                "51d4513897f618f9"
-            ]
-        ]
-    },
-    {
-        "id": "51d4513897f618f9",
-        "type": "influxdb in",
-        "z": "068878340fe2503c",
-        "influxdb": "5bc7043e36b5ea36",
-        "name": "Get Electricity Consumption",
-        "query": "from(bucket: \"se4iot\")\n|> range(start: -6h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_price\")",
-        "rawOutput": false,
-        "precision": "",
-        "retentionPolicy": "",
-        "org": "univaq",
-        "x": 300,
-        "y": 300,
-        "wires": [
-            [
-                "2e53fe86a63f2524"
-            ]
-        ]
-    },
-    {
         "id": "76310f54410d763f",
         "type": "mqtt in",
         "z": "a0e1bc1a96c71d2f",
@@ -1751,6 +1588,130 @@
         "statusType": "auto",
         "x": 1290,
         "y": 180,
+        "wires": []
+    },
+    {
+        "id": "4b44f6ca117f5c8d",
+        "type": "inject",
+        "z": "3ad31c0e616aeea9",
+        "name": "Light on",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "1",
+        "payloadType": "num",
+        "x": 220,
+        "y": 160,
+        "wires": [
+            [
+                "970c49370bcfeab5"
+            ]
+        ]
+    },
+    {
+        "id": "970c49370bcfeab5",
+        "type": "mqtt out",
+        "z": "3ad31c0e616aeea9",
+        "name": "Switch test",
+        "topic": "wvss/esp1/led",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 450,
+        "y": 160,
+        "wires": []
+    },
+    {
+        "id": "702c60814dd01860",
+        "type": "inject",
+        "z": "3ad31c0e616aeea9",
+        "name": "Light off",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "0",
+        "payloadType": "num",
+        "x": 220,
+        "y": 260,
+        "wires": [
+            [
+                "ce48d158d54b35f0"
+            ]
+        ]
+    },
+    {
+        "id": "ce48d158d54b35f0",
+        "type": "mqtt out",
+        "z": "3ad31c0e616aeea9",
+        "name": "Switch test",
+        "topic": "wvss/esp1/led",
+        "qos": "0",
+        "retain": "true",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 450,
+        "y": 260,
+        "wires": []
+    },
+    {
+        "id": "5e67f38861a0e788",
+        "type": "mqtt in",
+        "z": "3ad31c0e616aeea9",
+        "name": "Toggle msg",
+        "topic": "wvss/esp1/toggle",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "ab54eb197c955ed0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 230,
+        "y": 360,
+        "wires": [
+            [
+                "ecc5eeb57d23ab3b"
+            ]
+        ]
+    },
+    {
+        "id": "ecc5eeb57d23ab3b",
+        "type": "debug",
+        "z": "3ad31c0e616aeea9",
+        "name": "heartbeat",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 430,
+        "y": 360,
         "wires": []
     }
 ]
