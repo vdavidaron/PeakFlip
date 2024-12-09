@@ -1713,5 +1713,43 @@
         "x": 430,
         "y": 360,
         "wires": []
+    },
+    {
+        "id": "8b31ca071b793a49",
+        "type": "mqtt in",
+        "z": "3ad31c0e616aeea9",
+        "name": "Temp msg",
+        "topic": "wvss/esp1/temperature",
+        "qos": "0",
+        "datatype": "auto-detect",
+        "broker": "ab54eb197c955ed0",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 220,
+        "y": 480,
+        "wires": [
+            [
+                "e717426631ad1ad0"
+            ]
+        ]
+    },
+    {
+        "id": "e717426631ad1ad0",
+        "type": "debug",
+        "z": "3ad31c0e616aeea9",
+        "name": "Temperature",
+        "active": true,
+        "tosidebar": true,
+        "console": true,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 440,
+        "y": 480,
+        "wires": []
     }
 ]
