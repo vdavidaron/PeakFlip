@@ -816,8 +816,8 @@
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
         "version": "16.1.0",
-        "local": true,
-        "user": true,
+        "local": false,
+        "user": false,
         "nodes": {
             "telegrambot": {
                 "name": "telegrambot",
@@ -831,10 +831,10 @@
                     "telegram control"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-telegrambot",
-                "file": "/data/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
             }
         }
     }

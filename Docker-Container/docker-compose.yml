@@ -18,20 +18,18 @@ services:
     volumes:
       - ./nodered-custom/data:/data
 
-
   mosquitto:
     container_name: peakflip-mosquitto
     image: eclipse-mosquitto
     volumes:
-    - ./mosquitto/config:/mosquitto/config
-    - ./mosquitto/log:/mosquitto/log
-    - ./mosquitto/data/:/mosquitto/data
+      - ./mosquitto/config:/mosquitto/config
+      - ./mosquitto/log:/mosquitto/log
+      - ./mosquitto/data/:/mosquitto/data
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.101
     ports:
-    - "1883:1883" 
-
+      - "1883:1883"
 
   influxdb:
     container_name: peakflip-influxdb
@@ -52,7 +50,7 @@ services:
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.104
-  
+
   grafana:
     image: grafana/grafana:latest
     container_name: peakflip-grafana
@@ -68,19 +66,19 @@ services:
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.105
-  
+
   telegraf:
     image: telegraf
     container_name: peakflip-telegraf
     volumes:
-    - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
+      - ./telegraf/telegraf.conf:/etc/telegraf/telegraf.conf:ro
     depends_on:
       - influxdb
       - mosquitto
     links:
       - influxdb
     ports:
-      - '8125:8125'    
+      - '8125:8125'
     networks:
       peakflip-network:
         ipv4_address: 172.31.0.102
@@ -91,4 +89,3 @@ networks:
     ipam:
       config:
         - subnet: 172.31.0.0/16
-
