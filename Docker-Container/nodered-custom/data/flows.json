@@ -228,9 +228,9 @@
                 "vt": "str"
             }
         ],
-        "repeat": "86400",
-        "crontab": "",
-        "once": false,
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
