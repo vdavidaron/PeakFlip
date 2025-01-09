@@ -228,9 +228,9 @@
                 "vt": "str"
             }
         ],
-        "repeat": "86400",
-        "crontab": "",
-        "once": false,
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
@@ -899,14 +899,14 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "1",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 220,
+        "x": 230,
         "y": 140,
         "wires": [
             [
