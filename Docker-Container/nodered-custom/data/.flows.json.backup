@@ -228,9 +228,9 @@
                 "vt": "str"
             }
         ],
-        "repeat": "86400",
-        "crontab": "",
-        "once": false,
+        "repeat": "",
+        "crontab": "00 00 * * *",
+        "once": true,
         "onceDelay": 0.1,
         "topic": "",
         "payload": "",
@@ -1272,7 +1272,7 @@
         "id": "e48f6483c45e6329",
         "type": "function",
         "z": "a0e1bc1a96c71d2f",
-        "name": "Validate water level",
+        "name": "Water pump decision",
         "func": "const regex = /\\/([^/]+)\\/([^/]+)/;\nconst match = msg.topic.match(regex);\n\nif (match) {\n    const home = match[1]; // home_1\n    const device = match[2]; // device_1\n    if (msg.payload.water_level < 150) {\n        msg.topic = `/${home}/${device}/pump`;\n        msg.payload = 1;\n    }\n    else {\n        msg.topic = `/${home}/${device}/pump`;\n        msg.payload = 0;\n    }\n}\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
@@ -1280,7 +1280,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
+        "x": 420,
         "y": 40,
         "wires": [
             [
@@ -1339,7 +1339,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "5",
+        "repeat": "1800",
         "crontab": "",
         "once": false,
         "onceDelay": 0.1,
@@ -1411,22 +1411,6 @@
         "wires": []
     },
     {
-        "id": "45682db92bf928c7",
-        "type": "debug",
-        "z": "a0e1bc1a96c71d2f",
-        "name": "debug 19",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 380,
-        "y": 420,
-        "wires": []
-    },
-    {
         "id": "7a10583985989a32",
         "type": "function",
         "z": "a0e1bc1a96c71d2f",
@@ -1458,7 +1442,7 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 940,
+        "x": 820,
         "y": 280,
         "wires": [
             [
@@ -1574,7 +1558,7 @@
         "id": "8ec4dc5f90d9b351",
         "type": "join",
         "z": "a0e1bc1a96c71d2f",
-        "name": "Join by device",
+        "name": "Join price and devices",
         "mode": "custom",
         "build": "object",
         "property": "payload",
@@ -1591,7 +1575,7 @@
         "reduceInit": "",
         "reduceInitType": "num",
         "reduceFixup": "",
-        "x": 1000,
+        "x": 1030,
         "y": 180,
         "wires": [
             [
@@ -1603,8 +1587,8 @@
         "id": "ad190dcfda8a1845",
         "type": "function",
         "z": "a0e1bc1a96c71d2f",
-        "name": "Group by device",
-        "func": "let device_list = msg.payload.devices;\nlet price = msg.payload.price;\nlet messages = []\nlet payloads = []\nlet topics = []\n\ndevice_list.forEach(function(e) {\n  if (e.temperature < 20 && e.level > 100) {\n    payloads.push(1);\n    topics.push(`${e.id}/heater`);\n    msg.topic = `${e.id}/heater`;\n    messages.push({ topic: `${e.id}/heater`, payload: 1})\n  }\n});\nmsg.payload = messages;\nreturn msg;",
+        "name": "Heater decision",
+        "func": "let device_list = msg.payload.devices;\nlet price = msg.payload.price;\nlet messages = []\nlet payloads = []\nlet topics = []\n\n// TODO: decide on the logic\ndevice_list.forEach(function(e) {\n  if (e.temperature < 20 && e.level > 100) {\n    payloads.push(1);\n    topics.push(`${e.id}/heater`);\n    msg.topic = `${e.id}/heater`;\n    messages.push({ topic: `${e.id}/heater`, payload: 1})\n  }\n});\nmsg.payload = messages;\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1652,9 +1636,11 @@
         "rh": 0,
         "inputs": 0,
         "x": 180,
-        "y": 500,
+        "y": 480,
         "wires": [
-            []
+            [
+                "e501cfb78ff217e6"
+            ]
         ]
     },
     {
@@ -1717,15 +1703,15 @@
         "id": "0cec43d1695173e2",
         "type": "function",
         "z": "a0e1bc1a96c71d2f",
-        "name": "function 4",
-        "func": "// msg = { payload: msg.payload, topic: msg.payload.topic };\nreturn { payload: msg.payload.payload, topic: msg.payload.topic };",
+        "name": "Refine message",
+        "func": "return { payload: msg.payload.payload, topic: msg.payload.topic };",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 1340,
+        "x": 1360,
         "y": 300,
         "wires": [
             [
@@ -1747,7 +1733,7 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1470,
+        "x": 1500,
         "y": 340,
         "wires": []
     },
