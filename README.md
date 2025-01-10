@@ -1,3 +1,5 @@
+![PeakFlip](DocumentationPictures/PeakFlip.png)
+
 # PeakFlip
 Reducing electricity costs using an IoT system
 
@@ -6,6 +8,21 @@ As the electricity market in Europe becomes more and more liberal, spot pricing 
 
 We propose an IoT-based smart house system solution, PeakFlip, by taking advantage of fluctuating spot prices. This system automates electricity usage during low-price periods, helping consumers lower their energy costs. Additionally, PeakFlip sends alerts if predicted electricity consumption exceeds a pre-set threshold or if peak electricity price hours are coming. To demonstrate its functionality, we simulated a smart water boiler that regularly measures water level, as well as inside and outside temperature. The simulated device aims to reduce electricity consumption while maintaining a comfortable water temperature. 
 
+
+
+## Built With
+
+| Technology       |                                                                                         | Description                                  |
+|-------------------|---------------------------------------------------------------------------------------------|----------------------------------------------|
+| Wokwi            | ![Wokwi](https://avatars.githubusercontent.com/u/56967200?s=280&v=4)                        | Online hardware simulation platform          |
+| Apache Mosquitto | ![Apache Mosquitto](https://www.virtuozzo.com/company/blog/wp-content/uploads/2017/09/eclipse-mosquitto-logo.png) | MQTT broker for lightweight messaging        |
+| InfluxDB         | ![InfluxDB](https://marketplace.thinger.io/plugins/influxdb2/assets/influxdb.svg)           | Time-series database for IoT data            |
+| Docker           | ![Docker](https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png)                  | Tool for containerization and orchestration  |
+| Node-RED         | ![Node-RED](https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png)          | Flow-based development tool for IoT          |
+| Grafana          | ![Grafana](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Grafana_logo.svg/800px-Grafana_logo.svg.png) | Analytics and monitoring visualization tool  |
+
+### Data Flow
+![Diagram](DocumentationPictures/Diagram.png)
 
 ## Wokwi Implementation
 
@@ -37,3 +54,5 @@ This system is implemented using an ESP32 device, which handles data reception f
 
 ### Customization:
 The system can handle multiple devices by renaming the **Home ID** (`home_1`) and **Device ID** (`device_1`).
+
+![Wokwi Implementation](DocumentationPictures/wokwi.png)
