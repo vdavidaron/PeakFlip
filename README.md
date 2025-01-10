@@ -12,16 +12,16 @@ We propose an IoT-based smart house system solution, PeakFlip, by taking advanta
 
 ## Built With
 
-| Technology       |                                                                                         | Description                                  |
+| Technology       |                                                           Logo                              | Description                                  |
 |-------------------|---------------------------------------------------------------------------------------------|----------------------------------------------|
 | Wokwi            | ![Wokwi](https://avatars.githubusercontent.com/u/56967200?s=280&v=4)                        | Online hardware simulation platform          |
-| Apache Mosquitto | ![Apache Mosquitto](https://www.virtuozzo.com/company/blog/wp-content/uploads/2017/09/eclipse-mosquitto-logo.png) | MQTT broker for lightweight messaging        |
+| Apache Mosquitto | ![Apache Mosquitto](https://vmssoftware.com/images/intro/product/mosquitto.png) | MQTT broker for lightweight messaging        |
 | InfluxDB         | ![InfluxDB](https://marketplace.thinger.io/plugins/influxdb2/assets/influxdb.svg)           | Time-series database for IoT data            |
 | Docker           | ![Docker](https://www.docker.com/wp-content/uploads/2022/03/Moby-logo.png)                  | Tool for containerization and orchestration  |
 | Node-RED         | ![Node-RED](https://upload.wikimedia.org/wikipedia/commons/2/2b/Node-red-icon.png)          | Flow-based development tool for IoT          |
 | Grafana          | ![Grafana](https://upload.wikimedia.org/wikipedia/commons/thumb/a/a1/Grafana_logo.svg/800px-Grafana_logo.svg.png) | Analytics and monitoring visualization tool  |
 
-### Data Flow
+### Data Flow 
 ![Diagram](DocumentationPictures/Diagram.png)
 
 ## Wokwi Implementation
