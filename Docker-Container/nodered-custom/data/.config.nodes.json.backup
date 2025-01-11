@@ -427,38 +427,6 @@
             }
         }
     },
-    "node-red-contrib-coap": {
-        "name": "node-red-contrib-coap",
-        "version": "0.8.0",
-        "local": false,
-        "user": false,
-        "nodes": {
-            "coap-in": {
-                "name": "coap-in",
-                "types": [
-                    "coap-server",
-                    "coap in",
-                    "coap response"
-                ],
-                "enabled": true,
-                "local": false,
-                "user": false,
-                "module": "node-red-contrib-coap",
-                "file": "/usr/src/node-red/node_modules/node-red-contrib-coap/coap/coap-in.js"
-            },
-            "coap-request": {
-                "name": "coap-request",
-                "types": [
-                    "coap request"
-                ],
-                "enabled": true,
-                "local": false,
-                "user": false,
-                "module": "node-red-contrib-coap",
-                "file": "/usr/src/node-red/node_modules/node-red-contrib-coap/coap/coap-request.js"
-            }
-        }
-    },
     "node-red-dashboard": {
         "name": "node-red-dashboard",
         "version": "3.6.5",
@@ -698,26 +666,6 @@
             }
         }
     },
-    "node-red-node-mysql": {
-        "name": "node-red-node-mysql",
-        "version": "2.0.0",
-        "local": false,
-        "user": false,
-        "nodes": {
-            "mysql": {
-                "name": "mysql",
-                "types": [
-                    "MySQLdatabase",
-                    "mysql"
-                ],
-                "enabled": true,
-                "local": false,
-                "user": false,
-                "module": "node-red-node-mysql",
-                "file": "/usr/src/node-red/node_modules/node-red-node-mysql/68-mysql.js"
-            }
-        }
-    },
     "node-red-contrib-influxdb": {
         "name": "node-red-contrib-influxdb",
         "version": "0.7.0",
@@ -737,79 +685,6 @@
                 "user": false,
                 "module": "node-red-contrib-influxdb",
                 "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
-            }
-        }
-    },
-    "@meowwolf/node-red-contrib-amqp": {
-        "name": "@meowwolf/node-red-contrib-amqp",
-        "version": "2.4.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "amqp-in": {
-                "name": "amqp-in",
-                "types": [
-                    "amqp-in"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-in.js"
-            },
-            "amqp-out": {
-                "name": "amqp-out",
-                "types": [
-                    "amqp-out"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-out.js"
-            },
-            "amqp-broker": {
-                "name": "amqp-broker",
-                "types": [
-                    "amqp-broker"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-broker.js"
-            },
-            "amqp-in-manual-ack": {
-                "name": "amqp-in-manual-ack",
-                "types": [
-                    "amqp-in-manual-ack"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-in-manual-ack.js"
-            }
-        }
-    },
-    "node-red-node-xmpp": {
-        "name": "node-red-node-xmpp",
-        "version": "0.6.3",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "xmpp": {
-                "name": "xmpp",
-                "types": [
-                    "xmpp in",
-                    "xmpp out",
-                    "xmpp-server"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-node-xmpp",
-                "file": "/data/node_modules/node-red-node-xmpp/92-xmpp.js"
             }
         }
     },
