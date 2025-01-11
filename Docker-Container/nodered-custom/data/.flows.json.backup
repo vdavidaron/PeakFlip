@@ -899,14 +899,14 @@
                 "vt": "str"
             }
         ],
-        "repeat": "",
+        "repeat": "10",
         "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
+        "once": true,
+        "onceDelay": "1",
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 220,
+        "x": 230,
         "y": 140,
         "wires": [
             [
@@ -1112,20 +1112,6 @@
         "wires": []
     },
     {
-        "id": "c8946da30ba260ac",
-        "type": "telegram sender",
-        "z": "068878340fe2503c",
-        "name": "",
-        "bot": "c746fed15930be8e",
-        "haserroroutput": false,
-        "outputs": 1,
-        "x": 600,
-        "y": 460,
-        "wires": [
-            []
-        ]
-    },
-    {
         "id": "46e21abc428a8c91",
         "type": "telegram receiver",
         "z": "068878340fe2503c",
@@ -1133,32 +1119,14 @@
         "bot": "c746fed15930be8e",
         "saveDataDir": "",
         "filterCommands": false,
-        "x": 180,
-        "y": 140,
+        "x": 80,
+        "y": 320,
         "wires": [
             [
                 "c60247538ac52a4f"
             ],
-            []
-        ]
-    },
-    {
-        "id": "2e53fe86a63f2524",
-        "type": "function",
-        "z": "068878340fe2503c",
-        "name": "Telegram Message",
-        "func": "let priceArr = msg.payload\n\nmsg.payload = {}\nmsg.payload.chatId = global.get(\"ChatID\");\nmsg.payload.type = \"message\";\n\nmsg.payload.content = priceArr.map(x => {\n    let date = new Date(x._time); \n    let hours = date.getUTCHours(); \n    let minutes = date.getUTCMinutes(); \n    let ampm = hours >= 12 ? \"PM\" : \"AM\";\n    hours = hours % 12 || 12; \n    minutes = minutes < 10 ? \"0\" + minutes : minutes; \n\n    return {\n        time: `${hours}:${minutes} ${ampm}`,\n        value: x._value\n    };\n});\n\nmsg.payload.content = msg.payload.content\n    .map(item => `Time: ${item.time}, Value: ${item.value}`)\n    .join(\"; \\n\");\n\n\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 450,
-        "y": 380,
-        "wires": [
             [
-                "c8946da30ba260ac"
+                "c60247538ac52a4f"
             ]
         ]
     },
@@ -1174,8 +1142,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 390,
-        "y": 140,
+        "x": 270,
+        "y": 320,
         "wires": [
             [
                 "50ee66b67f5340bf"
@@ -1195,56 +1163,559 @@
         "targetType": "msg",
         "statusVal": "",
         "statusType": "auto",
-        "x": 590,
-        "y": 120,
+        "x": 450,
+        "y": 320,
         "wires": []
     },
     {
-        "id": "fd555ec6ee3b2d51",
-        "type": "inject",
+        "id": "e1c84cfa185d5753",
+        "type": "function",
         "z": "068878340fe2503c",
-        "name": "",
-        "props": [
-            {
-                "p": "payload"
-            },
-            {
-                "p": "topic",
-                "vt": "str"
-            }
-        ],
-        "repeat": "",
-        "crontab": "",
-        "once": false,
-        "onceDelay": 0.1,
-        "topic": "",
-        "payload": "",
-        "payloadType": "date",
-        "x": 100,
-        "y": 260,
+        "name": "Parse data",
+        "func": "let areaAverages = JSON.parse(msg.payload).areaAverages;\nlet formattedData = areaAverages[0].price\n\nmsg.payload = {}\nmsg.payload.chatId = global.get(\"ChatID\");\nmsg.payload.type = \"message\";\n\nmsg.payload.content = `Today's average price is ${formattedData} euro`\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 950,
+        "y": 560,
         "wires": [
             [
-                "51d4513897f618f9"
+                "b937bc66f1d48953"
             ]
         ]
     },
     {
-        "id": "51d4513897f618f9",
+        "id": "6e10862ba2dbc416",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Set date parameter",
+        "func": "const today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based\nconst dd = String(today.getDate()).padStart(2, '0');\n\nmsg.dateParam = `${yyyy}-${mm}-${dd}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 480,
+        "wires": [
+            [
+                "2f0ecdef5f5952b3"
+            ]
+        ]
+    },
+    {
+        "id": "2f0ecdef5f5952b3",
+        "type": "change",
+        "z": "068878340fe2503c",
+        "name": "Change date parameter",
+        "rules": [
+            {
+                "t": "set",
+                "p": "date",
+                "pt": "msg",
+                "to": "dateParam",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 480,
+        "wires": [
+            [
+                "e89b50d432596e13"
+            ]
+        ]
+    },
+    {
+        "id": "e89b50d432596e13",
+        "type": "http request",
+        "z": "068878340fe2503c",
+        "name": "Get spot price",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date={{{date}}}&market=DayAhead&deliveryArea=FI&currency=EUR",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 760,
+        "y": 560,
+        "wires": [
+            [
+                "e1c84cfa185d5753"
+            ]
+        ]
+    },
+    {
+        "id": "ce13ecf99052cd04",
+        "type": "telegram receiver",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 80,
+        "y": 480,
+        "wires": [
+            [
+                "ca5275621134969c"
+            ],
+            [
+                "ca5275621134969c"
+            ]
+        ]
+    },
+    {
+        "id": "ca5275621134969c",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Avareg Price Command",
+        "func": "msg.payload.content === \"/avareg\" ? msg.payload = 1 : msg.payload = 0\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 480,
+        "wires": [
+            [
+                "57df11a1163899c8"
+            ]
+        ]
+    },
+    {
+        "id": "57df11a1163899c8",
+        "type": "switch",
+        "z": "068878340fe2503c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 530,
+        "y": 480,
+        "wires": [
+            [
+                "6e10862ba2dbc416"
+            ]
+        ]
+    },
+    {
+        "id": "b937bc66f1d48953",
+        "type": "telegram sender",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1160,
+        "y": 560,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5b6b5531a6292973",
+        "type": "telegram receiver",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 80,
+        "y": 720,
+        "wires": [
+            [
+                "c4b5568d1690a6c1"
+            ],
+            [
+                "c4b5568d1690a6c1"
+            ]
+        ]
+    },
+    {
+        "id": "c4b5568d1690a6c1",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Avareg Price Command",
+        "func": "msg.payload.content === \"/peakoff\" ? msg.payload = 1 : msg.payload = 0\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 720,
+        "wires": [
+            [
+                "a0dc601d652374de"
+            ]
+        ]
+    },
+    {
+        "id": "a0dc601d652374de",
+        "type": "switch",
+        "z": "068878340fe2503c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 530,
+        "y": 720,
+        "wires": [
+            [
+                "221d75b7e402a5f2"
+            ]
+        ]
+    },
+    {
+        "id": "221d75b7e402a5f2",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Set date parameter",
+        "func": "const today = new Date();\nconst yyyy = today.getFullYear();\nconst mm = String(today.getMonth() + 1).padStart(2, '0'); // Months are 0-based\nconst dd = String(today.getDate()).padStart(2, '0');\n\nmsg.dateParam = `${yyyy}-${mm}-${dd}`;\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 730,
+        "y": 720,
+        "wires": [
+            [
+                "57244b1bb93e5377"
+            ]
+        ]
+    },
+    {
+        "id": "57244b1bb93e5377",
+        "type": "change",
+        "z": "068878340fe2503c",
+        "name": "Change date parameter",
+        "rules": [
+            {
+                "t": "set",
+                "p": "date",
+                "pt": "msg",
+                "to": "dateParam",
+                "tot": "msg"
+            }
+        ],
+        "action": "",
+        "property": "",
+        "from": "",
+        "to": "",
+        "reg": false,
+        "x": 970,
+        "y": 720,
+        "wires": [
+            [
+                "5ae587e23095936c"
+            ]
+        ]
+    },
+    {
+        "id": "5a8dcd6c2ac3ddfa",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Parse data",
+        "func": "let blockPriceAggregates = JSON.parse(msg.payload).blockPriceAggregates;\n\n// Create an array to hold the formatted blocks\nlet formattedBlocks = blockPriceAggregates.map(block => {\n    // Parse the delivery times\n    let deliveryStart = new Date(block.deliveryStart);\n    let deliveryEnd = new Date(block.deliveryEnd);\n\n    // Extract date, hours, and minutes for start and end times\n    let startDate = `${String(deliveryStart.getUTCMonth() + 1).padStart(2, '0')}-${String(deliveryStart.getUTCDate()).padStart(2, '0')}`;\n    let startHours = String(deliveryStart.getUTCHours()).padStart(2, '0');\n    let startMinutes = String(deliveryStart.getUTCMinutes()).padStart(2, '0');\n\n    let endDate = `${String(deliveryEnd.getUTCMonth() + 1).padStart(2, '0')}-${String(deliveryEnd.getUTCDate()).padStart(2, '0')}`;\n    let endHours = String(deliveryEnd.getUTCHours()).padStart(2, '0');\n    let endMinutes = String(deliveryEnd.getUTCMinutes()).padStart(2, '0');\n\n    // Format the delivery time with date\n    let formattedStart = `${startDate} ${startHours}:${startMinutes}`;\n    let formattedEnd = `${endDate} ${endHours}:${endMinutes}`;\n\n    // Get the prices for area FI (replace \"FI\" with dynamic key if needed)\n    let prices = block.averagePricePerArea.FI;\n\n    // Format the block content\n    return `${block.blockName} hours\\nFrom ${formattedStart} to ${formattedEnd}\\n` +\n           `Average electricity bill: ${prices.average} euro\\n` +\n           `Minimum electricity bill: ${prices.min} euro\\n` +\n           `Maximum electricity bill: ${prices.max} euro\\n`;\n});\n\n// Combine all blocks into one message\nlet formattedMessage = formattedBlocks.join(\"\\n\");\n\n// Create the payload for Telegram\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: formattedMessage\n};\n\nreturn msg;\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 930,
+        "y": 800,
+        "wires": [
+            [
+                "122bb908b99bc9d3"
+            ]
+        ]
+    },
+    {
+        "id": "5ae587e23095936c",
+        "type": "http request",
+        "z": "068878340fe2503c",
+        "name": "Get spot price",
+        "method": "GET",
+        "ret": "txt",
+        "paytoqs": "ignore",
+        "url": "https://dataportal-api.nordpoolgroup.com/api/DayAheadPrices?date={{{date}}}&market=DayAhead&deliveryArea=FI&currency=EUR",
+        "tls": "",
+        "persist": false,
+        "proxy": "",
+        "insecureHTTPParser": false,
+        "authType": "",
+        "senderr": false,
+        "headers": [],
+        "x": 740,
+        "y": 800,
+        "wires": [
+            [
+                "5a8dcd6c2ac3ddfa"
+            ]
+        ]
+    },
+    {
+        "id": "122bb908b99bc9d3",
+        "type": "telegram sender",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1120,
+        "y": 800,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "5a1fa061ed2a3630",
         "type": "influxdb in",
         "z": "068878340fe2503c",
         "influxdb": "5bc7043e36b5ea36",
-        "name": "Get Electricity Consumption",
-        "query": "from(bucket: \"se4iot\")\n|> range(start: -6h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_price\")",
+        "name": "",
+        "query": "// Calculate the average cost per hour\nfrom(bucket: \"se4iot\")\n|> range(start: -24h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_cost\")\n|> filter(fn: (r) => r[\"_field\"] == \"cost\")\n|> filter(fn: (r) => r[\"currency\"] == \"EUR\")\n|> filter(fn: (r) => r[\"device\"] == \"device_1\")\n|> filter(fn: (r) => r[\"home\"] == \"home_1\")\n|> aggregateWindow(every: 1h, fn: mean, createEmpty: false) // Average cost per hour\n|> yield(name: \"avg_per_hour\")",
         "rawOutput": false,
         "precision": "",
         "retentionPolicy": "",
         "org": "univaq",
-        "x": 300,
-        "y": 300,
+        "x": 280,
+        "y": 980,
         "wires": [
             [
-                "2e53fe86a63f2524"
+                "09f15aea985dfe93"
             ]
+        ]
+    },
+    {
+        "id": "09f15aea985dfe93",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Avg per hour",
+        "func": "msg.payload = Math.round(msg.payload[0]._value * 10000) / 10000;\nmsg.topic = \"avg_per_hour\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 490,
+        "y": 980,
+        "wires": [
+            [
+                "06b53f23ea75a59b"
+            ]
+        ]
+    },
+    {
+        "id": "35691446dcc8d101",
+        "type": "influxdb in",
+        "z": "068878340fe2503c",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "",
+        "query": "// Calculate total cost over the 24 hours\nfrom(bucket: \"se4iot\")\n|> range(start: -24h)\n|> filter(fn: (r) => r[\"_measurement\"] == \"electricity_cost\")\n|> filter(fn: (r) => r[\"_field\"] == \"cost\")\n|> filter(fn: (r) => r[\"currency\"] == \"EUR\")\n|> filter(fn: (r) => r[\"device\"] == \"device_1\")\n|> filter(fn: (r) => r[\"home\"] == \"home_1\")\n|> sum(column: \"_value\")                                  // Calculate total cost\n|> yield(name: \"total_cost\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 280,
+        "y": 860,
+        "wires": [
+            [
+                "ce98fe862468dfc1"
+            ]
+        ]
+    },
+    {
+        "id": "ce98fe862468dfc1",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Total cost",
+        "func": "msg.payload = Math.round(msg.payload[0]._value * 10000) / 10000;\nmsg.topic = \"total_cost\";\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 480,
+        "y": 860,
+        "wires": [
+            [
+                "06b53f23ea75a59b"
+            ]
+        ]
+    },
+    {
+        "id": "06b53f23ea75a59b",
+        "type": "join",
+        "z": "068878340fe2503c",
+        "name": "",
+        "mode": "custom",
+        "build": "object",
+        "property": "payload",
+        "propertyType": "msg",
+        "key": "topic",
+        "joiner": "\\n",
+        "joinerType": "str",
+        "useparts": false,
+        "accumulate": true,
+        "timeout": "",
+        "count": "2",
+        "reduceRight": false,
+        "reduceExp": "",
+        "reduceInit": "",
+        "reduceInitType": "num",
+        "reduceFixup": "",
+        "x": 670,
+        "y": 900,
+        "wires": [
+            [
+                "0b400a5225f1ca7e"
+            ]
+        ]
+    },
+    {
+        "id": "0b400a5225f1ca7e",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "function 1",
+        "func": "let message = `The total electricity cost for today is ${msg.payload.total_cost} euros, with an average cost of ${msg.payload.avg_per_hour} euros per hour.`\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 820,
+        "y": 900,
+        "wires": [
+            [
+                "7f340e1bbd81f515"
+            ]
+        ]
+    },
+    {
+        "id": "8c4efc660e3f903d",
+        "type": "telegram receiver",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "saveDataDir": "",
+        "filterCommands": false,
+        "x": 80,
+        "y": 1100,
+        "wires": [
+            [
+                "d5e66a74cf6692c8"
+            ],
+            [
+                "d5e66a74cf6692c8"
+            ]
+        ]
+    },
+    {
+        "id": "d5e66a74cf6692c8",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Avareg Price Command",
+        "func": "msg.payload.content === \"/cost\" ? msg.payload = 1 : msg.payload = 0\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 310,
+        "y": 1100,
+        "wires": [
+            [
+                "7e17b1887dc08009"
+            ]
+        ]
+    },
+    {
+        "id": "7e17b1887dc08009",
+        "type": "switch",
+        "z": "068878340fe2503c",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            },
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 2,
+        "x": 90,
+        "y": 920,
+        "wires": [
+            [
+                "35691446dcc8d101"
+            ],
+            [
+                "5a1fa061ed2a3630"
+            ]
+        ]
+    },
+    {
+        "id": "7f340e1bbd81f515",
+        "type": "telegram sender",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1040,
+        "y": 900,
+        "wires": [
+            []
         ]
     },
     {
@@ -1284,7 +1755,8 @@
         "y": 40,
         "wires": [
             [
-                "965d7599b055c1b2"
+                "965d7599b055c1b2",
+                "45bf10c1ca3e3dcd"
             ]
         ]
     },
@@ -1600,7 +2072,8 @@
         "wires": [
             [
                 "1cefa5aabedd17f3",
-                "592cb6aa8c529f7c"
+                "592cb6aa8c529f7c",
+                "488a67c2c81e96e2"
             ]
         ]
     },
@@ -1749,8 +2222,84 @@
         "complete": "false",
         "statusVal": "",
         "statusType": "auto",
-        "x": 1290,
-        "y": 180,
+        "x": 1300,
+        "y": 140,
+        "wires": []
+    },
+    {
+        "id": "488a67c2c81e96e2",
+        "type": "function",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "Heater notification",
+        "func": "// Create an array to hold the device information\nlet devices = [];\n\n// Loop through each item in msg.payload\nmsg.payload.forEach(item => {\n    // Check if the heater is turned on (payload === 1)\n    if (item.payload === 1) {\n        // Extract the home and device information from the topic\n        let topicParts = item.topic.split(\"/\");\n        let home = topicParts[1];    // Extract \"home_1\"\n        let device = topicParts[2];  // Extract \"device_1\"\n\n        // Add the device information to the devices array\n        devices.push(`${home} (${device})`);\n    }\n});\n\n// Check if any devices are found\nif (devices.length > 0) {\n    // Combine the device names into a single message\n    let combinedDevices = devices.join(\", \");\n    let messageContent = `Hey! The following heaters have just been turned on: ${combinedDevices}.`;\n\n    // Construct the Telegram message\n    msg.payload = {\n        chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n        type: \"message\",\n        content: messageContent\n    };\n\n    return msg; // Send the message\n} else {\n    return null; // If no heaters are turned on, do nothing\n}\n",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 1550,
+        "y": 140,
+        "wires": [
+            [
+                "775332398467d613"
+            ]
+        ]
+    },
+    {
+        "id": "775332398467d613",
+        "type": "telegram sender",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 1760,
+        "y": 140,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "45bf10c1ca3e3dcd",
+        "type": "switch",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "",
+        "property": "payload",
+        "propertyType": "msg",
+        "rules": [
+            {
+                "t": "eq",
+                "v": "1",
+                "vt": "num"
+            }
+        ],
+        "checkall": "true",
+        "repair": false,
+        "outputs": 1,
+        "x": 890,
+        "y": 80,
+        "wires": [
+            [
+                "2a8460757f0fde03"
+            ]
+        ]
+    },
+    {
+        "id": "2a8460757f0fde03",
+        "type": "debug",
+        "z": "a0e1bc1a96c71d2f",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "topic",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 1060,
+        "y": 80,
         "wires": []
     }
 ]
