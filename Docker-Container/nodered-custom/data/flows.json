@@ -1868,6 +1868,88 @@
         ]
     },
     {
+        "id": "ae59fd452c1f7e1b",
+        "type": "inject",
+        "z": "068878340fe2503c",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "21600",
+        "crontab": "",
+        "once": false,
+        "onceDelay": "10",
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 90,
+        "y": 1140,
+        "wires": [
+            [
+                "9e3da6bb05454f09"
+            ]
+        ]
+    },
+    {
+        "id": "4703dbab4e60c2c1",
+        "type": "function",
+        "z": "068878340fe2503c",
+        "name": "Cumulative Value",
+        "func": "let cost = Math.round(msg.payload[6]._value * 100) / 100;\n\nlet message = `Your electricity bill is ${cost}`\n\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 530,
+        "y": 1140,
+        "wires": [
+            [
+                "e978be2bd708b9bc"
+            ]
+        ]
+    },
+    {
+        "id": "9e3da6bb05454f09",
+        "type": "influxdb in",
+        "z": "068878340fe2503c",
+        "influxdb": "5bc7043e36b5ea36",
+        "name": "",
+        "query": "import \"date\"\n\nfrom(bucket: \"se4iot\")\n  |> range(start: date.truncate(t: now(), unit: 1mo), stop: now())\n  |> filter(fn: (r) => r[\"_measurement\"] == \"electricity_cost\")\n  |> filter(fn: (r) => r[\"_field\"] == \"cost\")\n  |> filter(fn: (r) => r[\"home\"] == \"home_1\")\n  |> group(columns: [])\n  |> aggregateWindow(every: 6h, fn: sum, createEmpty: false)\n  |> cumulativeSum(columns: [\"_value\"])\n  |> yield(name: \"cumulative_sum_all_devices\")",
+        "rawOutput": false,
+        "precision": "",
+        "retentionPolicy": "",
+        "org": "univaq",
+        "x": 300,
+        "y": 1140,
+        "wires": [
+            [
+                "4703dbab4e60c2c1"
+            ]
+        ]
+    },
+    {
+        "id": "e978be2bd708b9bc",
+        "type": "telegram sender",
+        "z": "068878340fe2503c",
+        "name": "",
+        "bot": "c746fed15930be8e",
+        "haserroroutput": false,
+        "outputs": 1,
+        "x": 740,
+        "y": 1140,
+        "wires": [
+            []
+        ]
+    },
+    {
         "id": "76310f54410d763f",
         "type": "mqtt in",
         "z": "a0e1bc1a96c71d2f",
