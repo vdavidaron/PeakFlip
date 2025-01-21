@@ -1,7 +1,7 @@
 {
     "node-red": {
         "name": "node-red",
-        "version": "4.0.8",
+        "version": "4.0.5",
         "local": false,
         "user": false,
         "nodes": {
@@ -668,9 +668,9 @@
     },
     "node-red-contrib-influxdb": {
         "name": "node-red-contrib-influxdb",
-        "version": "0.6.1",
-        "local": true,
-        "user": true,
+        "version": "0.7.0",
+        "local": false,
+        "user": false,
         "nodes": {
             "influxdb": {
                 "name": "influxdb",
@@ -681,18 +681,18 @@
                     "influxdb in"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-influxdb",
-                "file": "/data/node_modules/node-red-contrib-influxdb/influxdb.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-influxdb/influxdb.js"
             }
         }
     },
     "node-red-contrib-telegrambot": {
         "name": "node-red-contrib-telegrambot",
         "version": "16.1.0",
-        "local": true,
-        "user": true,
+        "local": false,
+        "user": false,
         "nodes": {
             "telegrambot": {
                 "name": "telegrambot",
@@ -706,83 +706,10 @@
                     "telegram control"
                 ],
                 "enabled": true,
-                "local": true,
+                "local": false,
                 "user": false,
                 "module": "node-red-contrib-telegrambot",
-                "file": "/data/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
-            }
-        }
-    },
-    "@meowwolf/node-red-contrib-amqp": {
-        "name": "@meowwolf/node-red-contrib-amqp",
-        "version": "2.4.2",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "amqp-in": {
-                "name": "amqp-in",
-                "types": [
-                    "amqp-in"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-in.js"
-            },
-            "amqp-out": {
-                "name": "amqp-out",
-                "types": [
-                    "amqp-out"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-out.js"
-            },
-            "amqp-broker": {
-                "name": "amqp-broker",
-                "types": [
-                    "amqp-broker"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-broker.js"
-            },
-            "amqp-in-manual-ack": {
-                "name": "amqp-in-manual-ack",
-                "types": [
-                    "amqp-in-manual-ack"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "@meowwolf/node-red-contrib-amqp",
-                "file": "/data/node_modules/@meowwolf/node-red-contrib-amqp/build/src/nodes/amqp-in-manual-ack.js"
-            }
-        }
-    },
-    "node-red-node-xmpp": {
-        "name": "node-red-node-xmpp",
-        "version": "0.6.3",
-        "local": true,
-        "user": true,
-        "nodes": {
-            "xmpp": {
-                "name": "xmpp",
-                "types": [
-                    "xmpp in",
-                    "xmpp out",
-                    "xmpp-server"
-                ],
-                "enabled": true,
-                "local": true,
-                "user": false,
-                "module": "node-red-node-xmpp",
-                "file": "/data/node_modules/node-red-node-xmpp/92-xmpp.js"
+                "file": "/usr/src/node-red/node_modules/node-red-contrib-telegrambot/telegrambot/99-telegrambot.js"
             }
         }
     }

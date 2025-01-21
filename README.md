@@ -44,15 +44,25 @@ This system is implemented using an ESP32 device, which handles data reception f
 - **WiFi**: Connected via Wokwi-GUEST for network access.
 
 ### Setup Instructions:
-1. Install the Wokwi Simulator in Visual Studio Code.
-2. Log in to activate your license.
-3. Make sure to run the Docker container.
-4. Build the project by typing `pio run` in the terminal.
-5. To start the simulation, open VS Code and select `Wokwi: Start Simulation`.
-6. Click the start button to begin the visualization.
-7. Observe the serial monitor for connection logs, received MQTT messages, and published data.
+
+Use [Wokwi for Visual Studio Code](https://marketplace.visualstudio.com/items?itemName=wokwi.wokwi-vscode) to simulate this project.
+
+### Building
+
+This is a [PlatformIO](https://platformio.org) project. To build it, [install PlatformIO](https://docs.platformio.org/en/latest/core/installation/index.html), and then run the following command:
+
+```
+pio run
+```
+
+### Simulating
+
+To simulate this project, install [Wokwi for VS Code](https://marketplace.visualstudio.com/items?itemName=wokwi.wokwi-vscode). Open the project directory in Visual Studio Code, press **F1** and select "Wokwi: Start Simulator".
+
 
 ### Customization:
 The system can handle multiple devices by renaming the **Home ID** (`home_1`) and **Device ID** (`device_1`).
+
+The current implementation includes two devices: `/home_1/device_1/` in folder **esp32_mqtt** and `/home_1/device_2/#` in folder **esp32_mqtt2**.
 
 ![Wokwi Implementation](DocumentationPictures/wokwi.png)
