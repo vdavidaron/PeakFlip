@@ -1,3 +1,4 @@
 *.DS_Store
 Docker-Container/grafana/grafana.db
 Docker-Container/influxdb/data/*
+esp32_mqtt/.pio/build/esp32/*

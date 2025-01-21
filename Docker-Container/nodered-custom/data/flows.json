@@ -399,7 +399,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_1/water_temperature",
+        "topic": "/home_2/device_1/water_temperature",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -410,63 +410,6 @@
         "broker": "ab54eb197c955ed0",
         "x": 770,
         "y": 100,
-        "wires": []
-    },
-    {
-        "id": "3726dd759abf57ad",
-        "type": "mqtt in",
-        "z": "f61c2b29ea14be48",
-        "name": "",
-        "topic": "/home_1/device_1/water_temperature",
-        "qos": "2",
-        "datatype": "auto-detect",
-        "broker": "ab54eb197c955ed0",
-        "nl": false,
-        "rap": true,
-        "rh": 0,
-        "inputs": 0,
-        "x": 230,
-        "y": 380,
-        "wires": [
-            [
-                "60e579584b183408"
-            ]
-        ]
-    },
-    {
-        "id": "60e579584b183408",
-        "type": "function",
-        "z": "f61c2b29ea14be48",
-        "name": "function 2",
-        "func": "\nreturn msg;",
-        "outputs": 1,
-        "timeout": 0,
-        "noerr": 0,
-        "initialize": "",
-        "finalize": "",
-        "libs": [],
-        "x": 480,
-        "y": 380,
-        "wires": [
-            [
-                "bd44fa3d34bb1af9"
-            ]
-        ]
-    },
-    {
-        "id": "bd44fa3d34bb1af9",
-        "type": "debug",
-        "z": "f61c2b29ea14be48",
-        "name": "debug 12",
-        "active": true,
-        "tosidebar": true,
-        "console": false,
-        "tostatus": false,
-        "complete": "false",
-        "statusVal": "",
-        "statusType": "auto",
-        "x": 660,
-        "y": 380,
         "wires": []
     },
     {
@@ -488,24 +431,6 @@
                 "46b3552681a72602"
             ]
         ]
-    },
-    {
-        "id": "8c2bd301882ad0e0",
-        "type": "influxdb out",
-        "z": "f61c2b29ea14be48",
-        "influxdb": "5bc7043e36b5ea36",
-        "name": "",
-        "measurement": "test",
-        "precision": "",
-        "retentionPolicy": "",
-        "database": "database",
-        "precisionV18FluxV20": "ms",
-        "retentionPolicyV18Flux": "",
-        "org": "univaq",
-        "bucket": "se4iot",
-        "x": 690,
-        "y": 440,
-        "wires": []
     },
     {
         "id": "d0c890d79b973527",
@@ -537,7 +462,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_1/water_level",
+        "topic": "/home_2/device_1/water_level",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -600,7 +525,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_1/outside_temperature",
+        "topic": "/home_2/device_1/outside_temperature",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -663,7 +588,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_1/electricity_consumption",
+        "topic": "/home_2/device_1/electricity_consumption",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -713,8 +638,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 150,
-        "y": 540,
+        "x": 170,
+        "y": 380,
         "wires": [
             [
                 "d0c599420ca5aeaa"
@@ -726,7 +651,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_2/water_temperature",
+        "topic": "/home_2/device_2/water_temperature",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -735,8 +660,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ab54eb197c955ed0",
-        "x": 750,
-        "y": 540,
+        "x": 770,
+        "y": 380,
         "wires": []
     },
     {
@@ -751,8 +676,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 420,
-        "y": 540,
+        "x": 440,
+        "y": 380,
         "wires": [
             [
                 "44f05c6d6a197422"
@@ -776,8 +701,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 130,
-        "y": 600,
+        "x": 150,
+        "y": 440,
         "wires": [
             [
                 "b62720cdf6139c14"
@@ -789,7 +714,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_2/electricity_consumption",
+        "topic": "/home_2/device_2/electricity_consumption",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -798,8 +723,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ab54eb197c955ed0",
-        "x": 750,
-        "y": 600,
+        "x": 770,
+        "y": 440,
         "wires": []
     },
     {
@@ -814,8 +739,8 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 410,
-        "y": 600,
+        "x": 430,
+        "y": 440,
         "wires": [
             [
                 "c3ac45733d5e2e8c"
@@ -839,8 +764,8 @@
         "topic": "",
         "payload": "",
         "payloadType": "date",
-        "x": 150,
-        "y": 660,
+        "x": 170,
+        "y": 500,
         "wires": [
             [
                 "c18157e6b2109f92"
@@ -852,7 +777,7 @@
         "type": "mqtt out",
         "z": "f61c2b29ea14be48",
         "name": "",
-        "topic": "/home_1/device_2/water_level",
+        "topic": "/home_2/device_2/water_level",
         "qos": "",
         "retain": "",
         "respTopic": "",
@@ -861,8 +786,8 @@
         "correl": "",
         "expiry": "",
         "broker": "ab54eb197c955ed0",
-        "x": 690,
-        "y": 660,
+        "x": 710,
+        "y": 500,
         "wires": []
     },
     {
@@ -877,11 +802,74 @@
         "initialize": "",
         "finalize": "",
         "libs": [],
-        "x": 400,
-        "y": 660,
+        "x": 420,
+        "y": 500,
         "wires": [
             [
                 "f89f6e62037e44d3"
+            ]
+        ]
+    },
+    {
+        "id": "69ebb13ad24e9a80",
+        "type": "inject",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "props": [
+            {
+                "p": "payload"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 560,
+        "wires": [
+            [
+                "5f61a82e68d6e433"
+            ]
+        ]
+    },
+    {
+        "id": "b9a0663c2f4427b2",
+        "type": "mqtt out",
+        "z": "f61c2b29ea14be48",
+        "name": "",
+        "topic": "/home_2/device_2/outside_temperature",
+        "qos": "",
+        "retain": "",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "ab54eb197c955ed0",
+        "x": 780,
+        "y": 560,
+        "wires": []
+    },
+    {
+        "id": "5f61a82e68d6e433",
+        "type": "function",
+        "z": "f61c2b29ea14be48",
+        "name": "Generate outside temperature",
+        "func": "let tmp = Math.random() * (20 - 10) + 10;\nmsg.payload = {\n    \"outside_temperature\": tmp\n}; \nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 450,
+        "y": 560,
+        "wires": [
+            [
+                "b9a0663c2f4427b2"
             ]
         ]
     },
