@@ -1,3 +1,3 @@
 *.DS_Store
-Docker-Container/nodered-custom/data/*
+Docker-Container/grafana/grafana.db
 Docker-Container/influxdb/data/*
