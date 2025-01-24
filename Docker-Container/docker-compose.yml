@@ -10,6 +10,7 @@ services:
       - TZ=Europe/Amsterdam
       - MYSQLUSERNAME=root
       - MYSQLPASSWORD=example
+      - BOT_TOKEN=8096513032:AAEGW6XccynrblJEMNMo_OETgb2Q3kWHMEc
     ports:
       - "1880:1880"
     networks:
