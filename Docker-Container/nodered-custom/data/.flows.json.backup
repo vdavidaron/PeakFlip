@@ -1881,7 +1881,7 @@
                 "vt": "str"
             }
         ],
-        "repeat": "5",
+        "repeat": "21600",
         "crontab": "",
         "once": false,
         "onceDelay": "10",
@@ -1901,7 +1901,7 @@
         "type": "function",
         "z": "068878340fe2503c",
         "name": "Cumulative Value",
-        "func": "let cost = Math.round(msg.payload[6]._value * 100) / 100;\n\nlet message = `Your electricity bill is ${cost}`\n\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\nreturn msg;",
+        "func": "let cost = Math.round(msg.payload[msg.payload.length - 1]._value * 100) / 100;\n\nlet message = `Your electricity bill is ${cost}`\n\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
@@ -1931,7 +1931,8 @@
         "y": 1140,
         "wires": [
             [
-                "4703dbab4e60c2c1"
+                "4703dbab4e60c2c1",
+                "4ffe71453e06e7e4"
             ]
         ]
     },
@@ -1948,6 +1949,22 @@
         "wires": [
             []
         ]
+    },
+    {
+        "id": "4ffe71453e06e7e4",
+        "type": "debug",
+        "z": "068878340fe2503c",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 500,
+        "y": 1220,
+        "wires": []
     },
     {
         "id": "76310f54410d763f",

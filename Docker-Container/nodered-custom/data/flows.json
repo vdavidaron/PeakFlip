@@ -1901,7 +1901,7 @@
         "type": "function",
         "z": "068878340fe2503c",
         "name": "Cumulative Value",
-        "func": "let cost = Math.round(msg.payload[6]._value * 100) / 100;\n\nlet message = `Your electricity bill is ${cost}`\n\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\nreturn msg;",
+        "func": "let cost = Math.round(msg.payload[msg.payload.length - 1]._value * 100) / 100;\n\nlet message = `Your electricity bill is ${cost}`\n\nmsg.payload = {\n    chatId: global.get(\"ChatID\"), // Replace with the appropriate global variable for Chat ID\n    type: \"message\",\n    content: message\n};\nreturn msg;",
         "outputs": 1,
         "timeout": 0,
         "noerr": 0,
